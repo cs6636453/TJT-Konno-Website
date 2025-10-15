@@ -309,6 +309,23 @@ fieldset.trip_planner label.radio {
 #backToTop:hover {
     background-color: lightcyan;
     color: black;
+    height: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+section#page_not_found {
+    background-color: darkcyan;
+    color: white;
+    text-align: center;
+    font-weight: normal;
+    font-size: 36px;
+    height: 500px;
+
+    /* Flexbox for perfect centering */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 @media only screen and (max-width: 992px) {
