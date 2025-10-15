@@ -97,7 +97,7 @@
     let linePriority = [];
     const destinationCache = new Map();
 
-    // --- NEW: Hardcoded Line Termini ---
+    // --- Hardcoded Line Termini ---
     const lineTermini = {
         'ILL': ['POH', 'YJJ'], 'EW': ['YJJ', 'TWF'], 'KM': ['RSN', 'PPL'],
         'LP': ['KSC', 'MSV'], 'LPB': ['LJN', 'LCT'], 'NK': ['TWE', 'KCN'],
@@ -147,7 +147,7 @@
         };
     }
 
-    // --- NEW HELPER to check path existence for determining direction ---
+    // --- HELPER to check path existence for determining direction ---
     function pathExistsOnLine(startNode, endNode, line, prevNode) {
         const queue = [startNode];
         const visited = new Set([prevNode, startNode]);
@@ -428,26 +428,25 @@
 
                 let displayDestinationName;
                 const nextSegment = processedSegments[index + 1];
+                const lineKey = String(segment.line).trim();
+                const termini = lineTermini[lineKey];
 
-                // --- MODIFIED LOGIC for destination display ---
-                if (endStationKey === finalDestinationKey) {
-                    displayDestinationName = locationMap.get(finalDestinationKey);
-                } else if (nextSegment && nextSegment.type === 'thru' && segment.line === nextSegment.fromLine) {
+                // --- REVISED LOGIC for destination display ---
+                if (nextSegment && nextSegment.type === 'thru' && segment.line === nextSegment.fromLine) {
                     displayDestinationName = locationMap.get(nextSegment.at) || nextSegment.at;
-                } else {
+                } else if (termini) {
                     const startNode = segment.stops[0];
-                    const nextNode = segment.stops[1]; // A ride segment always has at least 2 stops.
-                    const termini = lineTermini[segment.line];
-                    let terminusKey = endStationKey; // Default to the end of the segment
-                    if (termini) {
-                        // Check direction: if the first terminus is reachable from the next stop, we're heading that way.
-                        if(pathExistsOnLine(nextNode, termini[0], segment.line, startNode)) {
-                            terminusKey = termini[0];
-                        } else {
-                            terminusKey = termini[1];
-                        }
+                    const nextNode = segment.stops[1];
+                    let terminusKey;
+                    if (pathExistsOnLine(nextNode, termini[0], lineKey, startNode)) {
+                        terminusKey = termini[0];
+                    } else {
+                        terminusKey = termini[1];
                     }
                     displayDestinationName = locationMap.get(terminusKey) || terminusKey;
+                } else {
+                    // Fallback ONLY for lines NOT in the termini list
+                    displayDestinationName = locationMap.get(endStationKey);
                 }
 
                 const intermediateStops = segment.stops.slice(1, -1);
