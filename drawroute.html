@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.png">
+    <title>Greater Limaru Network Map</title>
+
+    <link href="https://unpkg.com/vis-network/styles/vis-network.min.css" rel="stylesheet"/>
+    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
+    <style>
+        :root { --panel-width: 380px; }
+        html,body { height:100%; margin:0; font-family:Inter,system-ui,Segoe UI,Roboto,Arial; }
+        #app { display:grid; grid-template-columns:1fr var(--panel-width); gap:12px; height:100vh; padding:12px; box-sizing:border-box; background:#f7f8fb; }
+        #network { border:1px solid #e1e4ea; border-radius:8px; background:#fff; overflow:hidden; }
+        #sidebar { background:#fff; border:1px solid #e1e4ea; border-radius:8px; padding:12px; box-sizing:border-box; overflow:auto; display:flex; flex-direction:column; }
+        h2 { margin:0 0 8px 0; font-size:16px; }
+        .controls { display:flex; gap:8px; margin-bottom:10px; }
+        button { padding:6px 10px; border-radius:6px; border:1px solid #c7cbd6; background:#fff; cursor:pointer; }
+        input[type="search"] { width:100%; padding:8px; border-radius:6px; border:1px solid #d0d4dc; margin-bottom:10px; box-sizing:border-box; }
+        #info { font-size:13px; white-space:pre-wrap; color:#1f2937; }
+        .legend { margin-top:12px; font-size:13px; color:#374151; }
+        .legend-row { display:flex; gap:8px; align-items:center; margin:6px 0; flex-wrap:wrap; }
+        .sw { width:18px; height:14px; border-radius:3px; border:1px solid #c0c4cc; }
+        .meta { font-size:12px; color:#6b7280; margin-bottom:8px; }
+        .line-name { font-weight:600; margin-right:6px; }
+        .small { font-size:12px; color:#6b7280; }
+        footer {font-size: 12px; color: gray; margin-top: auto; margin-bottom: 0; border-top: 1px solid #e1e4ea; padding-top: 6px;}
+    </style>
+</head>
+<body>
+<div id="app">
+    <div id="network"></div>
+
+    <aside id="sidebar">
+        <h2>Greater Limaru Network Map</h2>
+        <div class="meta">Takarazaki Joint Transport Inc. | Konno Pte., Ltd.</div>
+
+        <div id="info">Loading…</div>
+
+        <div class="legend" id="legend">
+            <div class="small">Legends</div>
+        </div>
+        <footer>
+            Data © 2025 TJT Inc. & Konno Pte., Ltd., All rights reserved.<br>
+            Visualization by <b>winsanwmtv</b> & ChatGPT (GPT-5)<br>
+            Powered by <a href="https://visjs.org/" target="_blank">Vis.js</a>
+        </footer>
+    </aside>
+</div>
+
+<script>
+    (async function() {
+        const infoEl = document.getElementById('info');
+        const container = document.getElementById('network');
+
+        // Line meta config
+        const lines_meta = {
+            "ILL": { color: "#fcba03", freq: 4, name: "Island Loop Line" },
+            "EW":  { color: "#03fca9", freq: 8, name: "Tozai Line" },
+            "KM":  { color: "#037ffc", freq: 8, name: "Keishin Line" },
+            "LP":  { color: "#ff2b1c", freq: 8, name: "Lipan Line" },
+            "LPB": { color: "#ff2b1c", freq: 4, name: "Lipan Branch" },
+            "NK":  { color: "#0bd919", freq: 8, name: "Namboku Line" },
+            "TJ":  { color: "#0d8c37", freq: 8, name: "Tennoji Line" },
+            "TJE":  { color: "#0d8c37", freq: 999, name: "Tennoji Line" },
+            "CD":  { color: "#e4f005", freq: 8, name: "Chiyoda Line" },
+            "QY":  { color: "#9c0c86", freq: 999, name: "Katsuragi-Leighstrand Shuttle" },
+            "TK":  { color: "#915f13", freq: 999, name: "Tokaido Line" },
+            "KK":  { color: "#23b9eb", freq: 999, name: "Kotoha Line" },
+            "M1":  { color: "#2373eb", freq: 8, name: "Mizuno BRT (M1)", isBus: true },
+            "M6":  { color: "#2373eb", freq: 0, name: "Bus M6", isBus: true },
+            "M7":  { color: "#2373eb", freq: 8, name: "Bus M7", isBus: true },
+            "M9":  { color: "#db250d", freq: 999, name: "Songtaew M9", isBus: true },
+            "L41": { color: "#3b3b3b", freq: 0, name: "L41 Bridging Bus", isBus: true },
+            "E17": { color: "#3b3b3b", freq: 999, name: "Bus E17", isBus: true },
+            "0":   { color: "#9e9e9e", freq: 0, name: "Walk / OSI", isWalk: true }
+        };
+
+        // fetch helper
+        async function tryFetch(paths) {
+            for (const p of paths) {
+                try {
+                    const r = await fetch(p + '?_=' + Date.now());
+                    if (!r.ok) continue;
+                    const json = await r.json();
+                    return { path: p, json };
+                } catch {}
+            }
+            return null;
+        }
+
+        // Load mapping once
+        const mappingRes = await tryFetch(['/api/dataset.json','./api/dataset.json','./dataset.json']);
+        if (!mappingRes) { infoEl.textContent = 'Missing mapping JSON.'; return; }
+        const mapping = mappingRes.json;
+        const keyToName = {};
+        (mapping.stations || []).forEach(s => { if (s.key) keyToName[s.key] = s.name || s.key; });
+        (mapping.bus_stops || []).forEach(b => { if (b.key) keyToName[b.key] = b.name || b.key; });
+
+        // Build legend
+        const legend = document.getElementById('legend');
+        Object.entries(lines_meta).forEach(([k,v])=>{
+            const row=document.createElement('div'); row.className='legend-row';
+            const sw=document.createElement('div'); sw.className='sw'; sw.style.background=v.color;
+            const lbl=document.createElement('div');
+            lbl.innerHTML=`<span class="line-name">${k}</span> <span class="small">${v.name}</span>`;
+            row.appendChild(sw); row.appendChild(lbl); legend.appendChild(row);
+        });
+
+        let network, nodesDS, edgesDS;
+        const options = {
+            physics: { stabilization: true, barnesHut: { gravitationalConstant: -20000, springLength: 200 } },
+            edges: { smooth: { type: 'dynamic' }, selfReferenceSize: 10 },
+            nodes: { shape: 'dot', font: { multi: true, size: 12 } },
+            interaction: { hover: true, navigationButtons: true, keyboard: true }
+        };
+
+        function buildGraph(graph) {
+            const nodesMap = new Map();
+            const edges = [];
+            const edgeComboCount = {};
+
+            function addNode(id) {
+                if (nodesMap.has(id)) return;
+                const label = keyToName[id] || id;
+                nodesMap.set(id, {
+                    id,
+                    label: `${label}\n(${id})`,
+                    shape: 'dot',
+                    color: '#1f78b4',
+                    size: 10
+                });
+            }
+
+            Object.entries(graph).forEach(([origin, adj]) => {
+                addNode(origin);
+                Object.entries(adj || {}).forEach(([dest, e]) => {
+                    if (!e || typeof e !== 'object') return;
+                    addNode(dest);
+
+                    // Ensure lines array
+                    const lines = Array.isArray(e.lines) ? e.lines : (e.lines ? [e.lines] : ['0']);
+                    // freq can be a single number or an array
+                    const freqs = Array.isArray(e.freq) ? e.freq : Array(lines.length).fill(e.freq ?? '');
+
+                    const flags = e.flags || '';
+                    lines.forEach((L, idx) => {
+                        const meta = lines_meta[L] || lines_meta['0'];
+                        const freqVal = freqs[idx] ?? meta.freq ?? '';
+                        const baseKey = `${origin}-${dest}`;
+                        edgeComboCount[baseKey] = (edgeComboCount[baseKey] || 0) + 1;
+                        const offset = (edgeComboCount[baseKey] - 1) * 5;
+
+                        const freqLabel = freqVal !== '' ? ` (${freqVal})` : '';
+                        const labelText = meta.isWalk ? 'walk' : `${L}`;
+
+                        edges.push({
+                            id: `${origin}-${dest}-${L}-${edgeComboCount[baseKey]}`,
+                            from: origin,
+                            to: dest,
+                            arrows: 'to',
+                            label: labelText,
+                            dashes: meta.isWalk || flags.includes('walk'),
+                            color: { color: meta.color, highlight: meta.color, hover: meta.color },
+                            width: meta.isWalk ? 1.5 : (meta.isBus ? 2 : 3.5),
+                            smooth: { type: 'curvedCW', roundness: offset / 10 },
+                            title: `${keyToName[origin] || origin} → ${keyToName[dest] || dest}\n${meta.name}${freqLabel ? '\nFrequency: ' + freqLabel.replace(/[()]/g, '') + ' min' : ''}`
+                        });
+                    });
+                });
+            });
+
+            const nodes = Array.from(nodesMap.values());
+            return { nodes, edges };
+        }
+
+        async function loadGraphAndRender() {
+            infoEl.textContent='Fetching graph...';
+            const graphRes=await tryFetch(['/api/datanodes.json','./api/datanodes.json','./nodes.json']);
+            if (!graphRes) { infoEl.textContent='Graph JSON missing'; return; }
+            const {nodes,edges}=buildGraph(graphRes.json);
+            if (!network) {
+                nodesDS=new vis.DataSet(nodes);
+                edgesDS=new vis.DataSet(edges);
+                network=new vis.Network(container,{nodes:nodesDS,edges:edgesDS},options);
+                network.once('stabilizationIterationsDone',()=>network.fit());
+            } else {
+                nodesDS.clear(); edgesDS.clear();
+                nodesDS.add(nodes); edgesDS.add(edges);
+                network.fit();
+            }
+            infoEl.textContent=`Mapping: ${mappingRes.path}\nGraph: ${graphRes.path}\nLast updated: ${new Date().toLocaleTimeString()}`;
+        }
+
+        await loadGraphAndRender();
+        document.getElementById('reloadGraph').addEventListener('click', loadGraphAndRender);
+
+        // optional auto-refresh every 60 seconds
+
+        // Fit / physics / export buttons
+        document.getElementById('fitBtn').addEventListener('click',()=>network.fit());
+        let physicsOn=true;
+        document.getElementById('togglePhys').addEventListener('click',()=>{
+            physicsOn=!physicsOn;
+            network.setOptions({physics:{enabled:physicsOn}});
+            document.getElementById('togglePhys').textContent=physicsOn?'Pause physics':'Resume physics';
+        });
+        document.getElementById('exportPng').addEventListener('click',()=>{
+            const canvas=network.canvas.frame.canvas;
+            const a=document.createElement('a');
+            a.href=canvas.toDataURL('image/png');
+            a.download='transit-network.png';
+            a.click();
+        });
+    })();
+</script>
+</body>
+</html>

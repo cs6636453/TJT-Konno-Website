@@ -1,0 +1,656 @@
+{
+  "YJJ": {
+    "IND": { "lines": ["ILL"], "flags": "", "freq": 4 }
+  },
+
+  "IND": {
+    "YJJ": { "lines": ["ILL"], "flags": "", "freq": 4 },
+    "POH": { "lines": ["ILL"], "flags": "", "freq": 4 },
+    "BID": { "lines": [0], "flags": "", "freq": 0 }
+  },
+
+  "POH": {
+    "IND": { "lines": ["ILL"], "flags": "", "freq": 4 }
+  },
+
+  "BID": {
+    "YJJ": { "lines": ["EW"], "flags": "", "freq": 8 },
+    "LND": { "lines": ["EW"], "flags": "", "freq": 8 },
+    "IND": { "lines": [0], "flags": "", "freq": 0 }
+  },
+
+  "LND": {
+    "BID": { "lines": ["EW"], "flags": "", "freq": 8 },
+    "RSN": { "lines": ["EW"], "flags": "", "freq": 8 }
+  },
+
+  "RSN": {
+    "LND": { "lines": ["EW"], "flags": "", "freq": 8 },
+    "BGT": { "lines": ["EW"], "flags": "", "freq": 8 },
+    "MND": { "lines": ["KM"], "flags": "", "freq": 8 }
+  },
+
+  "BGT": {
+    "MND": { "lines": ["KM"], "flags": "", "freq": 8 },
+    "RSN": { "lines": ["EW"], "flags": "", "freq": 8 },
+    "HGT": { "lines": ["KM"], "flags": "", "freq": 8 },
+    "LGR": { "lines": ["EW"], "flags": "", "freq": 8 }
+  },
+
+  "HGT": {
+    "BGT": { "lines": ["KM"], "flags": "", "freq": 8 },
+    "LGR": { "lines": ["KM"], "flags": "", "freq": 8 }
+  },
+
+  "LGR": {
+    "HGT": { "lines": ["KM"], "flags": "", "freq": 8 },
+    "BGT": { "lines": ["EW"], "flags": "", "freq": 8 },
+    "DTN": { "lines": ["EW", "KM"], "flags": "", "freq": 8 }
+  },
+
+  "DTN": {
+    "LGR": { "lines": ["EW", "KM"], "flags": "", "freq": 8 },
+    "CSV": { "lines": ["KM"], "flags": "", "freq": 8 },
+    "UNI": { "lines": ["EW"], "flags": "", "freq": 8 },
+    "BSH": { "lines": ["NK"], "flags": "", "freq": 8 },
+    "KNM": { "lines": ["NK"], "flags": "", "freq": 8 }
+  },
+
+  "KNM": {
+    "DTN": { "lines": ["NK"], "flags": "", "freq": 8},
+    "YCH": { "lines": ["NK"], "flags": "", "freq": 8}
+  },
+
+  "YCH": {
+    "KNM": { "lines": ["NK"], "flags": "", "freq": 8},
+    "KSG": { "lines": ["NK"], "flags": "", "freq": 8}
+  },
+
+  "KSG": {
+    "YCH": { "lines": ["NK"], "flags": "", "freq": 8},
+    "AKA": { "lines": ["NK"], "flags": "", "freq": 8}
+  },
+
+  "AKA": {
+    "KSG": { "lines": ["NK"], "flags": "", "freq": 8},
+    "YCS": { "lines": ["NK"], "flags": "", "freq": 8}
+  },
+
+  "BSH": {
+    "DTN": { "lines": ["NK"], "flags": "", "freq": 8},
+    "TWE": { "lines": ["NK"], "flags": "", "freq": 8},
+    "0010": { "lines": [0], "flags": "", "freq": 0 }
+  },
+
+  "TWE": {
+    "BSH": { "lines": ["NK"], "flags": "", "freq": 8}
+  },
+
+  "CSV": {
+    "DTN": { "lines": ["KM"], "flags": "", "freq": 8 },
+    "UNI": { "lines": ["KM"], "flags": "", "freq": 8 }
+  },
+
+  "UNI": {
+    "DTN": { "lines": ["EW"], "flags": "", "freq": 8 },
+    "CSV": { "lines": ["KM"], "flags": "", "freq": 8 },
+    "SKE": { "lines": ["KM"], "flags": "", "freq": 8 },
+    "SAJ": { "lines": ["EW"], "flags": "", "freq": 8 }
+  },
+
+  "SKE": {
+    "UNI": { "lines": ["KM"], "flags": "", "freq": 8 }
+  },
+
+  "SAJ": {
+    "UNI": { "lines": ["EW"], "flags": "", "freq": 8 },
+    "EMN": { "lines": ["EW"], "flags": "", "freq": 8 }
+  },
+
+  "EMN": {
+    "SAJ": { "lines": ["EW"], "flags": "", "freq": 8 },
+    "TWF": { "lines": ["EW"], "flags": "", "freq": 8 },
+    "0013": { "lines": [0], "flags": "", "freq": 0 }
+  },
+
+  "TWF": {
+    "BPR": { "lines": ["TK", "KK"], "flags": "", "freq": 999 },
+    "MNG": { "lines": ["TK", "KK"], "flags": "", "freq": 999 },
+    "0043": { "lines": [0], "flags": "", "freq": 0 }
+  },
+
+  "BPR": {
+    "BWD": { "lines": ["TK", "KK"], "flags": "", "freq": 999 },
+    "TWF": { "lines": ["TK", "KK"], "flags": "", "freq": 999 }
+  },
+
+  "BWD": {
+    "MFL": { "lines": ["TK", "KK"], "flags": "", "freq": 999 },
+    "BPR": { "lines": ["TK", "KK"], "flags": "", "freq": 999 }
+  },
+
+  "EPG": {
+    "EMN": { "lines": ["EW"], "flags": "", "freq": 8 },
+    "0017": { "lines": [0], "flags": "", "freq": 0 }
+  },
+
+  "MND": {
+    "RSN": { "lines": ["KM"], "flags": "", "freq": 8 },
+    "BGT": { "lines": ["KM"], "flags": "", "freq": 8 }
+  },
+
+  "SNR": {
+    "NKN": { "lines": ["KM"], "flags": "", "freq": 8 },
+    "PPL": { "lines": ["KM"], "flags": "", "freq": 8 }
+  },
+
+  "NKN": {
+    "SKE": { "lines": ["KM"], "flags": "", "freq": 8 },
+    "SNR": { "lines": ["KM"], "flags": "", "freq": 8 }
+  },
+
+  "KSC": {
+    "LJN": { "lines": ["LP"], "flags": "", "freq": 8 },
+    "0023": { "lines": [0], "flags": "", "freq": 0 }
+  },
+
+  "LJN": {
+    "KSC": { "lines": ["LP"], "flags": "", "freq": 8 },
+    "LCT": { "lines": ["LPB"], "flags": "", "freq": 4 },
+    "TPK": { "lines": ["LP"], "flags": "", "freq": 8 },
+    "0025": { "lines": [0], "flags": "", "freq": 0 }
+  },
+
+  "LCT": {
+    "LJN": { "lines": ["LPB"], "flags": "", "freq": 4 }
+  },
+
+  "TPK": {
+    "LJN": { "lines": ["LP"], "flags": "", "freq": 8 },
+    "GCF": { "lines": ["LP"], "flags": "", "freq": 8 }
+  },
+
+  "GCF": {
+    "TPK": { "lines": ["LP"], "flags": "", "freq": 8 },
+    "RRP": { "lines": ["LP"], "flags": "", "freq": 8 }
+  },
+
+  "RRP": {
+    "GCF": { "lines": ["LP"], "flags": "", "freq": 8 },
+    "MSV": { "lines": ["LP"], "flags": "", "freq": 8 }
+  },
+
+  "MSV": {
+    "RRP": { "lines": ["LP"], "flags": "", "freq": 8 }
+  },
+
+  "PPL": {
+    "SNR": { "lines": ["KM"], "flags": "", "freq": 8 },
+    "NTX": { "lines": ["TJ"], "flags": "", "freq": 8 },
+    "CUD": { "lines": ["CD"], "flags": "", "freq": 8 },
+    "MNG": { "lines": ["TJE"], "flags": "", "freq": 999 }
+  },
+
+  "MNG": {
+    "PPL": { "lines": ["TJE"], "flags": "", "freq": 999 },
+    "SRW": { "lines": ["TJE"], "flags": "", "freq": 999 },
+    "TWF": { "lines": ["TK", "KK"], "flags": "", "freq": 999 },
+    "OTK": { "lines": ["TK", "KK"], "flags": "", "freq": 999 }
+  },
+
+  "SRW": {
+    "MRI": { "lines": ["TJE"], "flags": "", "freq": 999 }
+  },
+
+  "MRI": {
+    "MNG": { "lines": ["TJE"], "flags": "", "freq": 999 },
+    "TEM": { "lines": ["TJE"], "flags": "", "freq": 999 }
+  },
+
+  "TEM": {
+    "MRI": { "lines": ["TJE"], "flags": "", "freq": 999 },
+    "KMT": { "lines": ["TJE"], "flags": "", "freq": 999 }
+  },
+
+  "KMT": {
+    "TEM": { "lines": ["TJE"], "flags": "", "freq": 999 },
+    "KNU": { "lines": ["KK"], "flags": "", "freq": 999 },
+    "KMK": { "lines": ["KK"], "flags": "", "freq": 999 }
+  },
+
+  "KNU": {
+    "SMY": { "lines": ["KK"], "flags": "", "freq": 999 },
+    "KMT": { "lines": ["KK"], "flags": "", "freq": 999 }
+  },
+
+  "SMY": {
+    "KNU": { "lines": ["KK"], "flags": "", "freq": 999 }
+  },
+
+  "PLJ": {
+    "PLE": { "lines": ["TJ"], "flags": "", "freq": 8 }
+  },
+
+  "PLE": {
+    "PLJ": { "lines": ["TJ"], "flags": "", "freq": 8 },
+    "YCS": { "lines": ["TJ"], "flags": "", "freq": 8 }
+  },
+
+  "YCS": {
+    "PLE": { "lines": ["TJ"], "flags": "", "freq": 8 },
+    "SRT": { "lines": ["TJ"], "flags": "", "freq": 8 },
+    "AKA": { "lines": ["NK"], "flags": "", "freq": 8},
+    "IWY": { "lines": ["NK"], "flags": "", "freq": 8}
+  },
+
+  "IWY": {
+    "YCS": { "lines": ["NK"], "flags": "", "freq": 8 },
+    "KSM": { "lines": ["NK"], "flags": "", "freq": 8 }
+  },
+
+  "KSM": {
+    "ECL": { "lines": ["NK"], "flags": "", "freq": 8 },
+    "IWY": { "lines": ["NK"], "flags": "", "freq": 8 },
+    "0022": { "lines": [0], "flags": "", "freq": 0 }
+  },
+
+  "SRT": {
+    "YCS": { "lines": ["TJ"], "flags": "", "freq": 8 },
+    "NTX": { "lines": ["TJ"], "flags": "", "freq": 8 }
+  },
+
+  "NTX": {
+    "SRT": { "lines": ["TJ"], "flags": "", "freq": 8 },
+    "PPL": { "lines": ["TJ"], "flags": "", "freq": 8 }
+  },
+
+  "CUD": {
+    "PPL": { "lines": ["CD"], "flags": "", "freq": 8 },
+    "EGT": { "lines": ["CD"], "flags": "", "freq": 8 }
+  },
+
+  "EGT": {
+    "CUD": { "lines": ["CD"], "flags": "", "freq": 8 },
+    "KPK": { "lines": ["CD"], "flags": "", "freq": 8 }
+  },
+
+  "EPR": {
+    "KPK": { "lines": ["CD"], "flags": "", "freq": 8 }
+  },
+
+  "KPK": {
+    "EGT": { "lines": ["CD"], "flags": "", "freq": 8 },
+    "EPR": { "lines": ["CD"], "flags": "", "freq": 8 },
+    "KYB": { "lines": ["TK"], "flags": "", "freq": 999 },
+    "SNS": { "lines": ["TK"], "flags": "", "freq": 999 }
+  },
+
+  "SNS": {
+    "KPK": { "lines": ["TK"], "flags": "", "freq": 999 },
+    "MZN": { "lines": ["TK"], "flags": "", "freq": 999 }
+  },
+
+  "MZN": {
+    "HKY": { "lines": ["TK"], "flags": "", "freq": 999 },
+    "SNS": { "lines": ["TK"], "flags": "", "freq": 999 }
+  },
+
+  "HKY": {
+    "OTK": { "lines": ["TK", "KK"], "flags": "", "freq": 999 },
+    "MZN": { "lines": ["TK"], "flags": "", "freq": 999 },
+    "MRM": { "lines": ["KK"], "flags": "", "freq": 999 }
+  },
+
+  "KCN": {
+    "TKW": { "lines": ["NK"], "flags": "", "freq": 8 },
+    "KSR": { "lines": [0], "flags": "", "freq": 0 },
+    "0024": { "lines": [0], "flags": "", "freq": 0 }
+  },
+
+  "KSR": {
+    "SDM": { "lines": ["QY"], "flags": "", "freq": 999 },
+    "KCN": { "lines": [0], "flags": "", "freq": 0 },
+    "0024": { "lines": [0], "flags": "", "freq": 0 }
+  },
+
+  "SDM": {
+    "KSR": { "lines": ["QY"], "flags": "", "freq": 999 },
+    "FHL": { "lines": ["QY"], "flags": "", "freq": 999 }
+  },
+
+  "FHL": {
+    "SDM": { "lines": ["QY"], "flags": "", "freq": 999 },
+    "EWT": { "lines": ["TK"], "flags": "", "freq": 999 },
+    "LGH": { "lines": ["QY"], "flags": "", "freq": 999 }
+  },
+
+  "LGH": {
+    "FHL": { "lines": ["QY"], "flags": "", "freq": 999}
+  },
+
+  "EWT": {
+    "FHL": { "lines": ["TK"], "flags": "", "freq": 999 },
+    "ECL": { "lines": ["TK"], "flags": "", "freq": 999 }
+  },
+
+  "ECL": {
+    "EWT": { "lines": ["TK"], "flags": "", "freq": 999 },
+    "GOJ": { "lines": ["TK"], "flags": "", "freq": 999 },
+    "KSM": { "lines": ["NK"], "flags": "", "freq": 8 },
+    "NHB": { "lines": ["NK"], "flags": "", "freq": 8 }
+  },
+
+  "NHB": {
+    "ECL": { "lines": ["NK"], "flags": "", "freq": 8 },
+    "NRT": { "lines": ["NK"], "flags": "", "freq": 8 }
+  },
+
+  "NRT": {
+    "NHB": { "lines": ["NK"], "flags": "", "freq": 8 },
+    "TKW": { "lines": ["NK"], "flags": "", "freq": 8 }
+  },
+
+  "TKW": {
+    "KCN": { "lines": ["NK"], "flags": "", "freq": 8 },
+    "NRT": { "lines": ["NK"], "flags": "", "freq": 8 }
+  },
+
+  "GOJ": {
+    "ECL": { "lines": ["TK"], "flags": "", "freq": 999 },
+    "KYB": { "lines": ["TK"], "flags": "", "freq": 999 }
+  },
+
+  "KYB": {
+    "GOJ": { "lines": ["TK"], "flags": "", "freq": 999 },
+    "KPK": { "lines": ["TK"], "flags": "", "freq": 999 }
+  },
+
+  "MFL": {
+    "BWD": { "lines": ["TK","KK"], "flags": "", "freq": 999 },
+    "KTH": { "lines": ["KK"], "flags": "", "freq": 999 },
+    "0033": { "lines": [0], "flags": "", "freq": 0 }
+  },
+
+  "KTH": {
+    "MFL": { "lines": ["KK"], "flags": "", "freq": 999 },
+    "MKW": { "lines": ["KK"], "flags": "", "freq": 999 }
+  },
+
+  "MKW": {
+    "CTE": { "lines": ["KK"], "flags": "", "freq": 999 },
+    "KTH": { "lines": ["KK"], "flags": "", "freq": 999 },
+    "0030": { "lines": [0], "flags": "", "freq": 0 }
+  },
+
+  "CTE": {
+    "MCS": { "lines": ["KK"], "flags": "", "freq": 999 },
+    "MKW": { "lines": ["KK"], "flags": "", "freq": 999 },
+    "0011": { "lines": [0], "flags": "", "freq": 0 }
+  },
+
+  "MCS": {
+    "CTE": { "lines": ["KK"], "flags": "", "freq": 999 },
+    "KMK": { "lines": ["KK"], "flags": "", "freq": 999 }
+  },
+
+  "KMK": {
+    "MCS": { "lines": ["KK"], "flags": "", "freq": 999 },
+    "KMT": { "lines": ["KK"], "flags": "", "freq": 999 }
+  },
+
+  "STN": {
+    "MRM": { "lines": ["KK"], "flags": "", "freq": 999 }
+  },
+
+  "MRM": {
+    "STN": { "lines": ["KK"], "flags": "", "freq": 999 },
+    "HKY": { "lines": ["KK"], "flags": "", "freq": 999 }
+  },
+
+  "OTK": {
+    "MNG": {
+      "lines": [
+        "TK",
+        "KK"
+      ],
+      "flags": "",
+      "freq": 999
+    },
+    "HKY": {
+      "lines": [
+        "TK",
+        "KK"
+      ],
+      "flags": "",
+      "freq": 999
+    }
+  },
+
+  "0033": {
+    "0038": { "lines": ["M1"], "flags": "", "freq": 8 },
+    "0019": { "lines": ["M6"], "flags": "", "freq": 0 },
+    "MFL": { "lines": [0], "flags": "", "freq": 0 }
+  },
+
+  "0038": {
+    "0033": { "lines": ["M1"], "flags": "", "freq": 8 },
+    "0031": { "lines": ["M1"], "flags": "", "freq": 8 },
+    "0018": { "lines": ["M7"], "flags": "", "freq": 8 }
+  },
+
+  "0031": {
+    "0038": { "lines": ["M1"], "flags": "", "freq": 8 },
+    "0002": { "lines": ["M1"], "flags": "", "freq": 8 }
+  },
+
+  "0002": {
+    "0031": { "lines": ["M1"], "flags": "", "freq": 8 },
+    "0001": { "lines": ["M1"], "flags": "", "freq": 8 }
+  },
+
+  "0001": {
+    "0002": { "lines": ["M1"], "flags": "", "freq": 8 },
+    "0009": { "lines": ["M1"], "flags": "", "freq": 8 }
+  },
+
+  "0009": {
+    "0001": { "lines": ["M1"], "flags": "", "freq": 8 },
+    "0007": { "lines": ["M1"], "flags": "", "freq": 8 },
+    "0032": { "lines": ["M9"], "flags": "", "freq": 999 },
+    "0041": { "lines": ["M9"], "flags": "", "freq": 999 }
+  },
+
+  "0041": {
+    "0007": { "lines": ["M9"], "flags": "", "freq": 999 },
+    "0009": { "lines": ["M9"], "flags": "", "freq": 999 }
+  },
+
+  "0032": {
+    "0027": { "lines": ["M9"], "flags": "", "freq": 999 },
+    "0009": { "lines": ["M9"], "flags": "", "freq": 999 }
+  },
+
+  "0027": {
+    "0020": { "lines": ["M9"], "flags": "", "freq": 999 },
+    "0032": { "lines": ["M9"], "flags": "", "freq": 999 }
+  },
+
+  "0020": {
+    "0027": { "lines": ["M9"], "flags": "", "freq": 999 }
+  },
+
+  "0007": {
+    "0008": { "lines": ["M1","M9"], "flags": "", "freq": [8, 999] },
+    "0041": { "lines": ["M9"], "flags": "", "freq": 999 }
+  },
+
+  "0008": {
+    "0007": { "lines": ["M1","M9"], "flags": "", "freq": [8, 999] },
+    "0037": { "lines": ["M9"], "flags": "", "freq": 999 },
+    "0021": { "lines": ["M1"], "flags": "", "freq": 8 }
+  },
+
+  "0037": {
+    "0021": { "lines": ["M9"], "flags": "", "freq": 999 },
+    "0008": { "lines": ["M9"], "flags": "", "freq": 999 }
+  },
+
+  "0021": {
+    "0008": { "lines": ["M1"], "flags": "", "freq": 8 },
+    "0037": { "lines": ["M9"], "flags": "", "freq": 999 },
+    "0023": { "lines": ["M9"], "flags": "", "freq": 999 }
+  },
+
+  "0023": {
+    "0028": { "lines": ["L41"], "flags": "", "freq": 0 },
+    "0025": { "lines": ["M9"], "flags": "", "freq": 999 },
+    "0021": { "lines": ["M9"], "flags": "", "freq": 999 },
+    "KSC": { "lines": [0], "flags": "", "freq": 0 }
+  },
+
+  "0028": {
+    "0010": { "lines": ["L41"], "flags": "", "freq": 0 },
+    "0023": { "lines": ["L41"], "flags": "", "freq": 0 }
+  },
+
+  "0010": {
+    "0028": { "lines": ["L41"], "flags": "", "freq": 0 },
+    "BSH": { "lines": [0], "flags": "", "freq": 0 }
+  },
+
+  "0025": {
+    "0023": { "lines": ["M9"], "flags": "", "freq": 999 },
+    "0026": { "lines": ["M9"], "flags": "", "freq": 999 },
+    "LJN": { "lines": [0], "flags": "", "freq": 0 }
+  },
+
+  "0026": {
+    "0025": { "lines": ["M9"], "flags": "", "freq": 999 }
+  },
+
+  "0013": {
+    "0040": { "lines": ["M6"], "flags": "", "freq": 0 },
+    "0043": { "lines": ["M7"], "flags": "", "freq": 8 },
+    "0017": { "lines": ["M7"], "flags": "", "freq": 0 },
+    "EMN": { "lines": [0], "flags": "", "freq": 0 }
+  },
+
+  "0043": {
+    "EMN": { "lines": [0], "flags": "", "freq": 0 }
+  },
+
+  "0040": {
+    "0043": { "lines": ["M6"], "flags": "", "freq": 0 },
+    "0006": { "lines": ["M6"], "flags": "", "freq": 0 }
+  },
+
+  "0006": {
+    "0040": { "lines": ["M6"], "flags": "", "freq": 0 },
+    "0034": { "lines": ["M6"], "flags": "", "freq": 0 }
+  },
+
+  "0034": {
+    "0006": { "lines": ["M6"], "flags": "", "freq": 0 },
+    "0019": { "lines": ["M6"], "flags": "", "freq": 0 }
+  },
+
+  "0019": {
+    "0034": { "lines": ["M6"], "flags": "", "freq": 0 },
+    "0033": { "lines": ["M6"], "flags": "", "freq": 0 }
+  },
+
+  "0017": {
+    "0013": { "lines": ["M7"], "flags": "", "freq": 8 },
+    "0005": { "lines": ["M7"], "flags": "", "freq": 8 },
+    "EPG": { "lines": [0], "flags": "", "freq": 0 }
+  },
+
+  "0005": {
+    "0036": { "lines": ["M7"], "flags": "", "freq": 8 }
+  },
+
+  "0004": {
+    "0017": { "lines": ["M7"], "flags": "", "freq": 8 }
+  },
+
+  "0003": {
+    "0004": { "lines": ["M7"], "flags": "", "freq": 8 }
+  },
+
+  "0036": {
+    "0003": { "lines": ["M7"], "flags": "", "freq": 8 },
+    "0044": { "lines": ["M7"], "flags": "", "freq": 8 }
+  },
+
+  "0044": {
+    "0036": { "lines": ["M7"], "flags": "", "freq": 8 },
+    "0011": { "lines": ["M7"], "flags": "", "freq": 8 }
+  },
+
+  "0011": {
+    "0044": { "lines": ["M7"], "flags": "", "freq": 8 },
+    "0045": { "lines": ["M7"], "flags": "", "freq": 8 },
+    "CTE": { "lines": [0], "flags": "", "freq": 0 }
+  },
+
+  "0045": {
+    "0011": { "lines": ["M7"], "flags": "", "freq": 8 },
+    "0030": { "lines": ["M7"], "flags": "", "freq": 8 }
+  },
+
+  "0030": {
+    "0045": { "lines": ["M7"], "flags": "", "freq": 8 },
+    "0018": { "lines": ["M7"], "flags": "", "freq": 8 },
+    "MKW": { "lines": [0], "flags": "", "freq": 0 }
+  },
+
+  "0018": {
+    "0030": { "lines": ["M7"], "flags": "", "freq": 8 },
+    "0046": { "lines": ["M7"], "flags": "", "freq": 8 }
+  },
+
+  "0046": {
+    "0038": { "lines": ["M7"], "flags": "", "freq": 8 }
+  },
+
+  "0014": {
+    "0015": { "lines": ["E17"], "flags": "", "freq": 999}
+  },
+
+  "0015": {
+    "0014": { "lines": ["E17"], "flags": "", "freq": 999},
+    "0022": { "lines": ["E17"], "flags": "", "freq": 999}
+  },
+
+  "0022": {
+    "0015": { "lines": ["E17"], "flags": "", "freq": 999},
+    "0035": { "lines": ["E17"], "flags": "", "freq": 999},
+    "KSM": { "lines": [0], "flags": "", "freq": 0 }
+  },
+
+  "0035": {
+    "0022": { "lines": ["E17"], "flags": "", "freq": 999},
+    "0016": { "lines": ["E17"], "flags": "", "freq": 999}
+  },
+
+  "0016": {
+    "0035": { "lines": ["E17"], "flags": "", "freq": 999},
+    "0039": { "lines": ["E17"], "flags": "", "freq": 999}
+  },
+
+  "0039": {
+    "0016": { "lines": ["E17"], "flags": "", "freq": 999},
+    "0024": { "lines": ["E17"], "flags": "", "freq": 999}
+  },
+
+  "0024": {
+    "0029": { "lines": ["E17"], "flags": "", "freq": 999},
+    "0039": { "lines": ["E17"], "flags": "", "freq": 999},
+    "KSR": { "lines": [0], "flags": "", "freq": 0 },
+    "KCN": { "lines": [0], "flags": "", "freq": 0 }
+  },
+
+  "0029": {
+    "0024": { "lines": ["E17"], "flags": "", "freq": 999}
+  }
+}

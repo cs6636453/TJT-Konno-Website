@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.png">
+    <title>Home | TJT Konno</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="assets/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@1" rel="stylesheet"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <script src="api/fetch_status.js"></script>
+    <script src="api/index_handle.js"></script>
+</head>
+<body>
+
+    <button id="backToTop" title="Back to top">
+        <span class="material-symbols-outlined">keyboard_arrow_up</span>
+    </button>
+
+    <section class="server_ip">
+        <b>IP: play.limaru.net</b> | Java 1.21.4 is recommended | Bedrock Port: 19132
+    </section>
+
+    <section class="icon_header">
+        <a href="#">
+            <img src="assets/favicon.png" alt="TJT">
+            <h1>TJT Konno</h1>
+        </a>
+    </section>
+
+    <nav>
+        <section class="icon_menu">
+            <a href="#" class="active">Home</a>
+            <a href="#">Kotoha Line</a>
+            <a href="#">Bus Services</a>
+            <a href="#">My Wasabi</a>
+            <a href="drawroute.html">Network Map</a>
+            <a href="#">Plazma GO!</a>
+            <a href="https://bluemap.limaru.net/">BlueMap</a>
+            <a href="https://limaru.net/">Limaru Website</a>
+            <a href="#" class="right">Who are we?</a>
+        </section>
+    </nav>
+
+    <main>
+        <section class="banner" id="ad1">
+            <img src="assets/banners/ad1.png" alt="Truth From Thailand">
+            <span class="material-symbols-outlined" onclick="close_banner('ad1')">close</span>
+        </section>
+
+        <section class="banner" id="ad2">
+            <img src="assets/banners/ad2.png" alt="Plazma Paradize">
+            <span class="material-symbols-outlined" onclick="close_banner('ad2')">close</span>
+        </section>
+
+        <section id="service_status">
+            <div class="loading-overlay" id="status_loading">
+                <div class="loading-spinner"></div>
+            </div>
+
+            <h1>Service Status</h1>
+            <div class="status_container">
+                <section id="tjt_status" class="status_box">
+                    <section>
+                        <span class="material-symbols-outlined">directions_subway</span>
+                        <h1>TJT Services</h1>
+                    </section>
+                    <div>
+                        <p>Kotoha Line</p> <span class="status" id="status_kk">N/A</span><br>
+                    </div>
+                    <div>
+                        <p>BRT-1</p> <span class="status" id="status_m1">N/A</span>
+                    </div>
+                    <div>
+                        <p>BRT-2</p> <span class="status" id="status_m2">N/A</span><br>
+                    </div>
+                    <div>
+                        <p>BRT-3</p> <span class="status" id="status_m3">N/A</span>
+                    </div>
+                    <div>
+                        <p>Mizuno M6</p> <span class="status" id="status_m6">N/A</span>
+                    </div>
+                    <div>
+                        <p>Mizuno M7</p> <span class="status" id="status_m7">N/A</span>
+                    </div>
+                </section>
+
+                <section id="bus_status" class="status_box">
+                    <section>
+                        <span class="material-symbols-outlined">directions_bus</span>
+                        <h1>Bus Services</h1>
+                    </section>
+                    <div>
+                        <p>Bus M4</p> <span class="status" id="status_m4">N/A</span>
+                    </div>
+                    <div>
+                        <p>Bus M5</p> <span class="status" id="status_m5">N/A</span>
+                    </div>
+                    <div>
+                        <p>Bus M8 ✈</p> <span class="status" id="status_m8">N/A</span>
+                    </div>
+                    <div>
+                        <p>Bus M9</p> <span class="status" id="status_m9">N/A</span>
+                    </div>
+                    <div>
+                        <p>Bus L41</p> <span class="status" id="status_l41">N/A</span>
+                    </div>
+                    <div>
+                        <p>Bus E17</p> <span class="status" id="status_e17">N/A</span>
+                    </div>
+                    <div>
+                        <p>Bus E23</p> <span class="status" id="status_e23">N/A</span>
+                    </div>
+                    <div>
+                        <p>Bus E134</p> <span class="status" id="status_e134">N/A</span>
+                    </div>
+                </section>
+
+                <section id="metro_status" class="status_box">
+                    <section>
+                        <span class="material-symbols-outlined">directions_railway</span>
+                        <h1>Limaru Metro</h1>
+                    </section>
+                    <div>
+                        <p>Tozai Line</p> <span class="status" id="status_ew">N/A</span><br>
+                    </div>
+                    <div>
+                        <p>Keishin Line</p> <span class="status" id="status_km">N/A</span>
+                    </div>
+                    <div>
+                        <p>Lipan Line</p> <span class="status" id="status_lp">N/A</span>
+                    </div>
+                    <div>
+                        <p>Namboku Line ✈</p> <span class="status" id="status_nk">N/A</span>
+                    </div>
+                    <div>
+                        <p>Tennoji Line</p> <span class="status" id="status_tj">N/A</span>
+                    </div>
+                    <div>
+                        <p>Chiyoda Line</p> <span class="status" id="status_cd">N/A</span>
+                    </div>
+                    <div>
+                        <p>Quay Line</p> <span class="status" id="status_qy">N/A</span>
+                    </div>
+                </section>
+
+                <section id="commuter_status" class="status_box">
+                    <section>
+                        <span class="material-symbols-outlined">tram</span>
+                        <h1>Regional Lines</h1>
+                    </section>
+                    <div>
+                        <p>Tokaido Line</p> <span class="status" id="status_tk">N/A</span><br>
+                    </div>
+                    <div>
+                        <p>Northeast Line</p> <span class="status" id="status_ne">N/A</span>
+                    </div>
+                    <div>
+                        <p>Southcoast Line</p> <span class="status" id="status_sc">N/A</span>
+                    </div>
+                    <div>
+                        <p>CTT Line 1</p> <span class="status" id="status_ctt1">N/A</span>
+                    </div>
+                    <div>
+                        <p>CTT Line 2</p> <span class="status" id="status_ctt2">N/A</span>
+                    </div>
+                </section>
+            </div>
+        </section>
+
+        <section id="trip_planner">
+            <h1>Trip Planner</h1>
+            <form id="trip_form" action="mytripquery/" method="GET">
+                <fieldset class="trip_planner">
+                    <legend>Navigate your route</legend>
+
+                    <input class="radio" type="radio" id="trip_all" name="criteria" value="fastest" checked>
+                    <label class="radio" for="trip_all">Fastest Route</label>
+
+                    <input class="radio" type="radio" id="trip_minsta" name="criteria" value="minsta">
+                    <label class="radio" for="trip_minsta">Minimum Stations</label>
+
+                    <input class="radio" type="radio" id="trip_mintrans" name="criteria" value="mintrans">
+                    <label class="radio" for="trip_mintrans">Minimum Transfers</label>
+                    <hr>
+
+                    <label class="text" for="trip_origin">Origin:</label>
+                    <div class="input-wrapper">
+                        <input class="text" type="text" id="trip_origin" autocomplete="off" required>
+                        <input type="hidden" name="origin" id="trip_origin_key">
+                    </div>
+
+                    <button type="button" class="swap" onclick="swap()">⇄</button>
+
+                    <label class="text" for="trip_dest">Destination:</label>
+                    <div class="input-wrapper">
+                        <input class="text" type="text" id="trip_dest" autocomplete="off" required>
+                        <input type="hidden" name="dest" id="trip_dest_key">
+                    </div>
+
+                    <button type="submit" class="submit">Find my route</button>
+                </fieldset>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p> <b>TJT</b>, we make you have a better future and living.</p><hr>
+        <p class="disclaimer">Disclaimer: Limaru is a city building community based on the video game "Minecraft". Information presented on this website should not be confused with real-world events and information. Limaru is not affiliated with Mojang, Microsoft, or GamerSafer.</p>
+        <p class="disclaimer">Not an official Minecraft server. Not approved by or associated with Mojang or Microsoft corporation.</p><hr>
+        <p>&copy 2025 Takarazaki Joint Transport Inc., All rights reserved.</p>
+    </footer>
+</body>
+</html>

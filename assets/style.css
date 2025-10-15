@@ -1,0 +1,316 @@
+body {
+    font-family: Poppins, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+nav {
+    background-color: darkcyan;
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
+.server_ip {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+    background-color: lightcyan;
+    color: black;
+    font-size: 14px;
+}
+
+section.banner {
+    width: 100%;
+    height: 120px;
+    background-color: lightcyan;
+    display: flex;
+    justify-content: center;  /* center the image horizontally */
+    align-items: center;      /* vertically center */
+    position: relative;       /* needed for absolute positioning of span */
+}
+
+section.banner img {
+    max-height: 100%;
+    height: 100px;
+    z-index: 1;               /* ensure image is above background */
+}
+
+section.banner span {
+    font-weight: bold;
+    font-size: 24px;
+    position: absolute;       /* position relative to banner */
+    right: 50px;              /* distance from right edge */
+    top: 50px;                 /* vertical center */
+    transform: translateY(-50%);
+    color: darkcyan;
+    cursor: pointer;
+    z-index: 2;               /* make sure span is above image */
+}
+
+.icon_header a {
+    background-color: darkcyan;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-decoration: none;
+}
+
+.icon_header a img {
+    width: 75px;
+    height: 75px;
+    margin-left: 57px;
+}
+
+.icon_header a h1 {
+    margin-left: 20px;
+    text-decoration: none;
+    color: white;
+}
+
+.icon_menu {
+    display: flex;
+    background-color: lightcyan;
+    color: black;
+    padding-left: 50px;
+}
+
+.icon_menu a {
+    padding: 20px;
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    margin: 0;
+}
+
+.icon_menu a:hover, a.active {
+    background-color: darkcyan;
+    color: white;
+}
+
+.icon_menu a.right {
+    margin-left: auto;
+    margin-right: 50px;
+}
+
+footer {
+    padding: 10px 50px;
+    background-color: darkcyan;
+    color: white;
+}
+
+footer p.disclaimer {
+    font-size: 14px;
+    color: lightgray;
+}
+
+main #service_status, main #trip_planner {
+    padding: 25px 50px;
+    background-color: white;
+    color: black;
+}
+
+main #service_status h1, main #trip_planner h1 {
+    margin: 0;
+}
+
+.status_box section {
+    padding-top: 10px;
+    align-items: center;
+    display: flex;
+}
+
+#service_status section h1 {
+    font-size: 28px;
+    padding-left: 10px;
+    font-weight: unset;
+}
+
+#service_status section span {
+    font-size: 48px;
+}
+
+section#service_status section.status_box {
+    font-size: 18px;
+    position: relative;
+    width: 300px;
+    margin-right: 50px;
+}
+
+section#service_status section.status_box section {
+    margin-bottom: 10px;
+}
+
+section#service_status section.status_box span.status {
+    position: absolute;
+    font-size: 18px;
+    padding: 2px 10px;
+    text-align: right;
+    right: 0;
+    margin: 5px 0;
+}
+
+
+.status_container {
+    display: flex;
+}
+
+section#service_status section.status_box div {
+    display: flex;
+}
+
+section#service_status section.status_box div p {
+    margin: 5px 0;
+}
+
+fieldset.trip_planner {
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+fieldset.trip_planner input.radio {
+    width: 14px;
+    height: 14px;
+}
+
+fieldset.trip_planner input.text {
+    width: 300px;
+    height: 32px;
+    font-size: 18px;
+    margin-right: 15px;
+}
+
+fieldset.trip_planner button.swap {
+    padding: 7px 15px;
+    font-size: 18px;
+    background-color: darkcyan;
+    color: white;
+    font-weight: bold;
+    border: none;
+    margin-right: 15px;
+    z-index: 1000;
+}
+
+fieldset.trip_planner button.submit {
+    padding: 7px 10px;
+    font-size: 18px;
+    background-color: darkcyan;
+    color: white;
+    border: none;
+    margin-right: 15px;
+    z-index: 1000;
+}
+
+fieldset.trip_planner label.text {
+    margin-right: 5px;
+}
+
+fieldset.trip_planner label.radio {
+    margin-right: 16px;
+}
+
+.bg-gray {
+    background-color: dimgray;
+    color: white;
+}
+
+.bg-red {
+    background-color: firebrick;
+    color: white;
+}
+
+.bg-orange {
+    background-color: orange;
+    color: white;
+}
+
+.bg-green {
+    background-color: mediumseagreen;
+    color: white;
+}
+
+#service_status {
+    position: relative; /* needed for overlay positioning */
+}
+
+.loading-overlay {
+    position: absolute;
+    inset: 0;
+    background: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 5px solid rgba(0, 0, 0, 0.2);
+    border-top-color: darkcyan;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.input-wrapper {
+    position: relative;
+    display: inline-block;
+    min-width: 300px; /* width of input itself */
+}
+
+.autocomplete-items {
+    border: 1px solid #ccc;
+    max-height: 250px;
+    position: absolute;
+    background: white;
+    z-index: 1000;
+    top: 100%; /* dropdown under input */
+    left: 0;
+    width: 500px; /* wider than input */
+    overflow-y: auto;
+    box-sizing: border-box;
+    white-space: nowrap;
+}
+
+.autocomplete-items div {
+    padding: 6px 10px;
+    cursor: pointer;
+}
+
+.autocomplete-items div:hover {
+    background-color: #f0f0f0;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+#backToTop {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 999;
+    border: none;
+    background-color: darkcyan;
+    color: white;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none; /* hidden by default */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    width: 50px;
+    height: 50px;
+}
+
+#backToTop:hover {
+    background-color: lightcyan;
+    color: black;
+}
+
+@media only screen and (max-width: 992px) {
+
+}
