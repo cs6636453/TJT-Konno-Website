@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchStatus().then(statusMap => {
         const statusIds = [
             "KK", "M1", "M2", "M3", "M6", "M7", "M4", "M5", "M8", "M9",
-            "L41", "E17", "E23", "E134", "EW", "KM", "LP", "NK", "TJ",
+            "L41", "E17", "E23", "E134", "EW", "KM", "LP", "NK", "TN",
             "CD", "QY", "TK", "NE", "SC", "CTT1", "CTT2"
         ];
 
