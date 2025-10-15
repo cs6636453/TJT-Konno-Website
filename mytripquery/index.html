@@ -95,6 +95,17 @@
     const isBusRoute = new Set();
     let connectionsData = {};
     let linePriority = [];
+    const destinationCache = new Map();
+
+    // --- NEW: Hardcoded Line Termini ---
+    const lineTermini = {
+        'ILL': ['POH', 'YJJ'], 'EW': ['YJJ', 'TWF'], 'KM': ['RSN', 'PPL'],
+        'LP': ['KSC', 'MSV'], 'LPB': ['LJN', 'LCT'], 'NK': ['TWE', 'KCN'],
+        'TN': ['PLJ', 'PPL'], 'TNE': ['KMT', 'PPL'], 'CY': ['PPL', 'EPR'],
+        'QY': ['KSR', 'LGH'], 'TK': ['FHL', 'MFL'], 'KK': ['STN', 'SMY'],
+        'M1': ['0033', '0021'], 'M6': ['0033', '0043'], 'M7': ['0038', '0043'],
+        'M9': ['0020', '0026'], 'L41': ['0023', '0010'], 'E17': ['0029', '0014']
+    };
 
     function getContrastingTextColor(hexcolor) {
         if (!hexcolor) return '#000000';
@@ -136,14 +147,37 @@
         };
     }
 
-    // --- START OF MODIFIED CODE ---
+    // --- NEW HELPER to check path existence for determining direction ---
+    function pathExistsOnLine(startNode, endNode, line, prevNode) {
+        const queue = [startNode];
+        const visited = new Set([prevNode, startNode]);
+
+        while(queue.length > 0) {
+            const currentNode = queue.shift();
+            if (currentNode === endNode) return true;
+
+            const neighbors = connectionsData[currentNode];
+            if (neighbors) {
+                for (const neighborKey in neighbors) {
+                    if (!visited.has(neighborKey)) {
+                        const connection = neighbors[neighborKey];
+                        const availableLines = Array.isArray(connection.lines) ? connection.lines : [connection.lines];
+                        if (availableLines.includes(line)) {
+                            visited.add(neighborKey);
+                            queue.push(neighborKey);
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
     function findBestPath(start, end, criteria) {
         console.log(`Starting search from ${start} to ${end} with criteria: '${criteria}'`);
 
         const costs = {
             'less-stations': { station: 3, transfer: 10, bus: 10, bus_transfer: 15, manual: 5, manual_bus: 15, osi: 20 },
-            // INCREASED transfer scores to make the algorithm prioritize direct routes.
             'mintrans': { station: 3, transfer: 150, bus: 15, bus_transfer: 200, manual: 5, manual_bus: 15, osi: 250 },
             'fastest': { station: 3, transfer: 4, bus: 8, bus_transfer: 6, manual: 10, manual_bus: 15, osi: 20 }
         };
@@ -151,23 +185,20 @@
         const activeCosts = costs[criteria] || costs['fastest'];
         console.log("Using cost profile:", activeCosts);
 
-        // PATH STRUCTURE CHANGED: path is now an array of {station, line} objects
         const pq = [{ cost: 0, path: [{ station: start, line: null }], line: null }];
         const visited = new Map();
-        const solutions = []; // Store all found paths to the destination
+        const solutions = [];
 
-        const MAX_ITERATIONS = 20000; // Safety break to prevent infinite loops in complex graphs
+        const MAX_ITERATIONS = 20000;
         let iterations = 0;
 
         while (pq.length > 0 && iterations < MAX_ITERATIONS) {
             iterations++;
             pq.sort((a, b) => a.cost - b.cost);
             const { cost, path, line: currentLine } = pq.shift();
-            // Get the station key from the last object in the path
             const currentNode = path.at(-1).station;
 
-            // Pruning: If the current path is already much worse than our best found solution, stop.
-            if (solutions.length > 0 && cost > solutions[0].cost * 2.0) { // Made pruning less aggressive
+            if (solutions.length > 0 && cost > solutions[0].cost * 1.5) {
                 continue;
             }
 
@@ -178,7 +209,7 @@
                 if (solutions.length > 10) {
                     solutions.pop();
                 }
-                continue; // Continue searching for other, potentially better, paths
+                continue;
             }
 
             const visitedKey = `${currentNode}-${currentLine}`;
@@ -199,7 +230,7 @@
 
                 for (const nextLine of availableLines) {
                     let newCost = cost;
-                    let stepBreakdown = [`From ${currentNode} to ${neighborKey} on line ${nextLine}`];
+                    const stepBreakdown = [`From ${currentNode} to ${neighborKey} on line ${nextLine}`];
 
                     newCost += activeCosts.station;
                     stepBreakdown.push(`+${activeCosts.station} (station)`);
@@ -243,7 +274,16 @@
                         }
                     }
 
-                    // Add new detailed path object to the queue
+                    if (currentLine !== null && nextLine === currentLine) {
+                        if (currentLine === 'M9') {
+                            newCost -= 5;
+                            stepBreakdown.push('-5 (M9 continuity bonus)');
+                        } else {
+                            newCost -= 0.5;
+                            stepBreakdown.push('-0.5 (continuity bonus)');
+                        }
+                    }
+
                     const newPath = [...path, { station: neighborKey, line: nextLine }];
                     pq.push({ cost: newCost, path: newPath, line: nextLine });
                 }
@@ -256,7 +296,7 @@
 
         if (solutions.length > 0) {
             console.log(`Found ${solutions.length} possible routes. Selecting the best one.`, solutions);
-            return solutions[0].path; // Return the path of the best solution found
+            return solutions[0].path;
         }
 
         console.log("No path found after exhaustive search.");
@@ -266,8 +306,7 @@
     function calculatePathDetails(detailedPath) {
         if (!detailedPath) return null;
 
-        // This function is now simpler as it receives the exact line choices.
-        const path = detailedPath.map(p => p.station); // Get a simple list of station keys for counting
+        const path = detailedPath.map(p => p.station);
         let transfers = 0;
         const legs = [];
         let lastRealLine = null;
@@ -279,12 +318,11 @@
             const connection = connectionsData[fromStation][toStation];
 
             if (String(line) === "0") {
-                lastRealLine = null; // An OSI resets the current line
+                lastRealLine = null;
             }
 
             const isThruService = !!(connection.flags?.includes("thru") && lastRealLine && ((lastRealLine === 'CY' && line === 'TN') || (lastRealLine === 'TN' && line === 'CY')));
 
-            // A transfer happens if the line changes, it's not the start, not an OSI, and not a thru service
             if (lastRealLine && line !== lastRealLine && String(line) !== "0" && !isThruService) {
                 transfers++;
             }
@@ -304,8 +342,6 @@
 
         return { path, legs, transfers, stationCount: path.length };
     }
-
-    // --- END OF MODIFIED CODE ---
 
 
     function getFrequencyText(freq) {
@@ -381,12 +417,39 @@
         }
 
         let html = '';
+        const finalDestinationKey = getQueryParams().dest;
+
         processedSegments.forEach((segment, index) => {
             if (segment.type === 'ride') {
                 const lineInfo = lineMap.get(segment.line) || { name: segment.line, color: '#cccccc' };
                 const textColor = getContrastingTextColor(lineInfo.color);
                 const startStation = locationMap.get(segment.stops[0]) || segment.stops[0];
-                const endStation = locationMap.get(segment.stops.at(-1)) || segment.stops.at(-1);
+                const endStationKey = segment.stops.at(-1);
+
+                let displayDestinationName;
+                const nextSegment = processedSegments[index + 1];
+
+                // --- MODIFIED LOGIC for destination display ---
+                if (endStationKey === finalDestinationKey) {
+                    displayDestinationName = locationMap.get(finalDestinationKey);
+                } else if (nextSegment && nextSegment.type === 'thru' && segment.line === nextSegment.fromLine) {
+                    displayDestinationName = locationMap.get(nextSegment.at) || nextSegment.at;
+                } else {
+                    const startNode = segment.stops[0];
+                    const nextNode = segment.stops[1]; // A ride segment always has at least 2 stops.
+                    const termini = lineTermini[segment.line];
+                    let terminusKey = endStationKey; // Default to the end of the segment
+                    if (termini) {
+                        // Check direction: if the first terminus is reachable from the next stop, we're heading that way.
+                        if(pathExistsOnLine(nextNode, termini[0], segment.line, startNode)) {
+                            terminusKey = termini[0];
+                        } else {
+                            terminusKey = termini[1];
+                        }
+                    }
+                    displayDestinationName = locationMap.get(terminusKey) || terminusKey;
+                }
+
                 const intermediateStops = segment.stops.slice(1, -1);
                 const icon = isBusRoute.has(segment.line) ? 'directions_bus' : 'train';
                 const freqText = getFrequencyText(segment.freq);
@@ -411,7 +474,7 @@
                                          <span class="material-symbols-outlined text-sm">${icon}</span>
                                          <span>${lineInfo.name}</span>
                                      </div>
-                                     <span class="ml-2 text-gray-600">to ${endStation}</span>
+                                     <span class="ml-2 text-gray-600">to ${displayDestinationName}</span>
                                      <div class="text-sm text-gray-500 mt-1 flex items-center gap-1">
                                          <span class="material-symbols-outlined text-base">schedule</span>
                                          <span>${freqText}</span>
@@ -558,6 +621,4 @@
 </body>
 
 </html>
-
-
 
