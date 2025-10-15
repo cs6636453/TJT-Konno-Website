@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +10,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -28,82 +30,50 @@
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
-        .timeline {
-            position: relative;
-        }
-        .timeline-item {
-            display: flex;
-            position: relative;
-            align-items: center; /* This is key for vertical alignment */
-        }
-        .timeline-connector {
-            flex-shrink: 0;
-            width: 2.5rem;
-            position: relative;
-            align-self: stretch;
-        }
-        .timeline-line {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 4px;
-            z-index: 1;
-        }
-        .timeline-content {
-            flex-grow: 1;
-            padding: 1rem 0;
-        }
-        .station-content {
-            padding: 1.25rem 0;
-        }
+        .timeline { position: relative; }
+        .timeline-item { display: flex; position: relative; align-items: center; }
+        .timeline-connector { flex-shrink: 0; width: 2.5rem; position: relative; align-self: stretch; }
+        .timeline-line { position: absolute; left: 50%; transform: translateX(-50%); width: 4px; z-index: 1; }
+        .timeline-content { flex-grow: 1; padding: 1rem 0; }
+        .station-content { padding: 1.25rem 0; }
         .timeline-dot {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background-color: white;
-            border-style: solid;
-            border-width: 4px;
-            z-index: 10;
+            position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+            width: 20px; height: 20px; border-radius: 50%; background-color: white;
+            border-style: solid; border-width: 4px; z-index: 10;
         }
         .intermediate-dot {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background-color: white;
-            border-style: solid;
-            border-width: 3px;
-            z-index: 10;
+            position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+            width: 14px; height: 14px; border-radius: 50%; background-color: white;
+            border-style: solid; border-width: 3px; z-index: 10;
         }
     </style>
 </head>
+
 <body class="text-gray-800">
 
 <div class="loading-overlay" id="loading">
     <div class="text-center">
-        <svg class="animate-spin h-8 w-8 text-blue-600 mx-auto mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <svg class="animate-spin h-8 w-8 text-blue-600 mx-auto mb-3" xmlns="http://www.w3.org/2000/svg" fill="none"
+             viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            <path class="opacity-75" fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+            </path>
         </svg>
         <p class="text-lg font-semibold text-gray-700">Finding the best route...</p>
     </div>
 </div>
 
 <div class="container mx-auto p-4 md:p-8 max-w-4xl">
-    <a id="back-button" href="../" class="inline-flex items-center gap-2 text-blue-600 mb-6 no-underline hover:no-underline">
+    <a id="back-button" href="../"
+       class="inline-flex items-center gap-2 text-blue-600 mb-6 no-underline hover:no-underline">
         <span class="material-symbols-outlined">arrow_back</span>
         Go Back
     </a>
     <div id="trip-details" class="bg-white rounded-lg shadow-md p-6 mb-8">
         <h2 class="text-2xl font-semibold mb-4 text-center">Trip Result</h2>
-        <div id="trip-stats" class="flex justify-center items-center gap-6 text-gray-600 mb-8 border-b pb-4"></div>
+        <div id="trip-stats"
+             class="flex justify-center items-center gap-6 text-gray-600 mb-8 border-b pb-4"></div>
         <div class="text-center text-gray-500" id="no-results">
             Please provide valid 'origin' and 'dest' query parameters in the URL.
         </div>
@@ -162,54 +132,152 @@
         return {
             origin: params.get('origin'),
             dest: params.get('dest'),
-            criteria: params.get('criteria') || 'fastest'
+            criteria: params.get('criteria') || 'fastest' // Default to 'fastest'
         };
     }
 
-    function findBestPath(start, end, criteria) {
-        const TRANSFER_PENALTY = criteria === 'mintrans' ? 1000 : (criteria === 'less-stations' ? 0 : 4);
+    // --- START OF MODIFIED CODE ---
 
+    function findBestPath(start, end, criteria) {
+        console.log(`Starting search from ${start} to ${end} with criteria: '${criteria}'`);
+
+        const costs = {
+            // Config for 'Minimum Stations'
+            'less-stations': {
+                station: 1,
+                transfer: 10,
+                bus: 5,
+                bus_transfer: 15,
+                manual: 5,
+                manual_bus: 15,
+                osi: 30,
+            },
+            // Config for 'Minimum Transfers'
+            'mintrans': {
+                station: 1,
+                transfer: 50,
+                bus: 5,
+                bus_transfer: 75,
+                manual: 5,
+                manual_bus: 15,
+                osi: 100,
+            },
+            // Fallback / Default (e.g., for 'fastest')
+            'fastest': {
+                station: 1, // Each station takes time
+                transfer: 4, // Transfers take time
+                bus: 2, // Buses might be slower
+                bus_transfer: 6,
+                manual: 10, // Manual services have high wait times
+                manual_bus: 15,
+                osi: 8, // Walking takes time
+            }
+        };
+
+        const activeCosts = costs[criteria] || costs['fastest'];
+        console.log("Using cost profile:", activeCosts);
+
+        // Priority queue stores { cost, path, line }
         const pq = [{ cost: 0, path: [start], line: null }];
+        // Visited map stores the minimum cost to reach a node on a specific line
         const visited = new Map();
 
         while (pq.length > 0) {
+            // Sort to simulate a priority queue (lowest cost first)
             pq.sort((a, b) => a.cost - b.cost);
             const { cost, path, line: currentLine } = pq.shift();
             const currentNode = path.at(-1);
 
             if (currentNode === end) {
-                return path;
+                console.log("Path found!", { path, cost });
+                return path; // Path found, return it
             }
 
+            // Optimization: if we've found a cheaper way to get to this node on this line, skip
             const visitedKey = `${currentNode}-${currentLine}`;
-            if (visited.has(visitedKey) && visited.get(visitedKey) <= cost) continue;
+            if (visited.has(visitedKey) && visited.get(visitedKey) <= cost) {
+                continue;
+            }
             visited.set(visitedKey, cost);
 
             const neighbors = connectionsData[currentNode];
             if (!neighbors) continue;
 
+            // Explore neighbors
             for (const neighborKey in neighbors) {
                 if (path.includes(neighborKey)) continue;
 
                 const connection = neighbors[neighborKey];
                 const availableLines = Array.isArray(connection.lines) ? connection.lines : [connection.lines];
 
+                // --- NEW: Iterate over all possible lines for this connection ---
                 for (const nextLine of availableLines) {
-                    const isThru = !!(connection.flags?.includes("thru") && ((currentLine === 'CY' && nextLine === 'TJ') || (currentLine === 'TJ' && nextLine === 'CY')));
+                    let newCost = cost;
+                    let stepBreakdown = [`From ${currentNode} to ${neighborKey} on line ${nextLine}`];
 
-                    let transferCost = 0;
-                    if (currentLine !== null && String(nextLine) !== String(currentLine) && !isThru) {
-                        transferCost = TRANSFER_PENALTY;
+                    // 1. Base cost for traversing one station
+                    newCost += activeCosts.station;
+                    stepBreakdown.push(`+${activeCosts.station} (station)`);
+
+                    // 2. Check for Out-of-Station Interchange (OSI)
+                    if (String(nextLine) === "0") {
+                        newCost += activeCosts.osi;
+                        stepBreakdown.push(`+${activeCosts.osi} (OSI)`);
+                    }
+                    // 3. Check for regular transfers
+                    else if (currentLine !== null && String(nextLine) !== String(currentLine)) {
+                        // Check for special "thru" service (CY <-> TJ)
+                        const isThru = connection.flags?.includes("thru") &&
+                            ((currentLine === 'CY' && nextLine === 'TN') ||
+                                (currentLine === 'TN' && nextLine === 'CY'));
+
+                        if (!isThru) {
+                            const isCurrentBus = isBusRoute.has(currentLine);
+                            const isNextBus = isBusRoute.has(nextLine);
+                            if (isCurrentBus || isNextBus) {
+                                newCost += activeCosts.bus_transfer;
+                                stepBreakdown.push(`+${activeCosts.bus_transfer} (bus transfer)`);
+                            } else {
+                                newCost += activeCosts.transfer;
+                                stepBreakdown.push(`+${activeCosts.transfer} (train transfer)`);
+                            }
+                        } else {
+                            stepBreakdown.push(`+0 (thru-service)`);
+                        }
                     }
 
-                    const newCost = cost + 1 + transferCost;
+                    // 4. Add penalties for route type
+                    const isNextLineBus = isBusRoute.has(nextLine);
+                    if (isNextLineBus) {
+                        newCost += activeCosts.bus;
+                        stepBreakdown.push(`+${activeCosts.bus} (bus route)`);
+                    }
 
+                    // 5. Add penalties for manual service
+                    if (connection.freq === 999) {
+                        if (isNextLineBus) {
+                            newCost += activeCosts.manual_bus;
+                            stepBreakdown.push(`+${activeCosts.manual_bus} (manual bus)`);
+                        } else {
+                            newCost += activeCosts.manual;
+                            stepBreakdown.push(`+${activeCosts.manual} (manual train)`);
+                        }
+                    }
+
+                    console.log(stepBreakdown.join(' '));
+
+                    // Add the new path option to the priority queue
                     pq.push({ cost: newCost, path: [...path, neighborKey], line: nextLine });
                 }
             }
         }
-        return null;
+
+        console.log("No path found.");
+        return null; // No path found
     }
+
+    // --- END OF MODIFIED CODE ---
+
 
     function calculatePathDetails(path) {
         if (!path) return null;
@@ -223,11 +291,11 @@
             const connection = connectionsData[from][to];
             const availableLines = Array.isArray(connection.lines) ? [...connection.lines] : [connection.lines];
 
-            let chosenLine = availableLines.includes(currentLine)
-                ? currentLine
-                : availableLines.sort((a, b) => linePriority.indexOf(a) - linePriority.indexOf(b))[0];
+            let chosenLine = availableLines.includes(currentLine) ?
+                currentLine :
+                availableLines.sort((a, b) => linePriority.indexOf(a) - linePriority.indexOf(b))[0];
 
-            const isThruService = !!(connection.flags?.includes("thru") && ((currentLine === 'CY' && chosenLine === 'TJ') || (currentLine === 'TJ' && chosenLine === 'CY')));
+            const isThruService = !!(connection.flags?.includes("thru") && ((currentLine === 'CY' && chosenLine === 'TN') || (currentLine === 'TN' && chosenLine === 'CY')));
 
             if (currentLine !== null && String(currentLine) !== String(chosenLine) && !isThruService) {
                 transfers++;
@@ -252,7 +320,7 @@
         resultsContainer.innerHTML = '';
         statsContainer.innerHTML = '';
 
-        if(isSameStation) {
+        if (isSameStation) {
             noResults.textContent = "Origin and destination are the same.";
             noResults.classList.remove('hidden');
             return;
@@ -267,19 +335,19 @@
 
         const departureTime = new Date();
         statsContainer.innerHTML = `
-            <div class="flex items-center gap-2">
-                <span class="material-symbols-outlined">schedule</span>
-                <span>Departing: ${departureTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <span class="material-symbols-outlined">tram</span>
-                <span>${bestPathDetails.stationCount - 1} stops</span>
-            </div>
              <div class="flex items-center gap-2">
-                <span class="material-symbols-outlined">transfer_within_a_station</span>
-                <span>${bestPathDetails.transfers} transfers</span>
-            </div>
-        `;
+                 <span class="material-symbols-outlined">schedule</span>
+                 <span>Departing: ${departureTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+             </div>
+             <div class="flex items-center gap-2">
+                 <span class="material-symbols-outlined">tram</span>
+                 <span>${bestPathDetails.stationCount - 1} stops</span>
+             </div>
+              <div class="flex items-center gap-2">
+                 <span class="material-symbols-outlined">transfer_within_a_station</span>
+                 <span>${bestPathDetails.transfers} transfers</span>
+             </div>
+         `;
 
         const processedSegments = [];
         if (bestPathDetails.legs.length > 0) {
@@ -324,50 +392,50 @@
 
                 if (!segment.isThruEntry) {
                     html += `<div class="timeline-item">
-                                <div class="timeline-connector">
-                                    <div class="timeline-line" style="background-color: ${lineInfo.color}; top: 50%; bottom: 0;"></div>
-                                    <div class="timeline-dot" style="border-color: ${lineInfo.color};"></div>
-                                </div>
-                                <div class="timeline-content station-content"><div class="font-bold text-xl">${startStation}</div></div>
-                             </div>`;
+                                 <div class="timeline-connector">
+                                     <div class="timeline-line" style="background-color: ${lineInfo.color}; top: 50%; bottom: 0;"></div>
+                                     <div class="timeline-dot" style="border-color: ${lineInfo.color};"></div>
+                                 </div>
+                                 <div class="timeline-content station-content"><div class="font-bold text-xl">${startStation}</div></div>
+                              </div>`;
                 }
 
                 html += `<div class="timeline-item">
-                            <div class="timeline-connector">
-                                <div class="timeline-line" style="background-color: ${lineInfo.color}; top: 0; bottom: 0;"></div>
-                            </div>
-                            <div class="timeline-content">
-                                 <div class="mb-2">
-                                    <div class="route-badge" style="background-color: ${lineInfo.color}; color: ${textColor};">
-                                        <span class="material-symbols-outlined text-sm">${icon}</span>
-                                        <span>${lineInfo.name}</span>
-                                    </div>
-                                    <span class="ml-2 text-gray-600">to ${endStation}</span>
-                                    <div class="text-sm text-gray-500 mt-1 flex items-center gap-1">
-                                        <span class="material-symbols-outlined text-base">schedule</span>
-                                        <span>${freqText}</span>
-                                    </div>
-                                </div>
-                                ${intermediateStops.length > 0 ? `
-                                <div class="relative">
-                                    <button class="toggle-stops text-sm text-blue-600 hover:underline my-2" data-target="stops-${index}">
-                                       Show ${intermediateStops.length} intermediate stop(s) <span class="arrow font-sans">&#9662;</span>
-                                    </button>
-                                    <div id="stops-${index}" class="hidden my-2 -ml-10">
-                                        ${intermediateStops.map(stop => `
-                                            <div class="timeline-item">
-                                                 <div class="timeline-connector">
-                                                    <div class="timeline-line" style="background-color: ${lineInfo.color}; top: 0; bottom: 0;"></div>
-                                                    <div class="intermediate-dot" style="border-color: ${lineInfo.color};"></div>
-                                                 </div>
-                                                <div class="timeline-content"><div class="text-gray-700 text-sm">${locationMap.get(stop) || stop}</div></div>
-                                            </div>
-                                        `).join('')}
-                                    </div>
-                                </div>
-                                ` : ''}
-                            </div>
-                        </div>`;
+                             <div class="timeline-connector">
+                                 <div class="timeline-line" style="background-color: ${lineInfo.color}; top: 0; bottom: 0;"></div>
+                             </div>
+                             <div class="timeline-content">
+                                  <div class="mb-2">
+                                     <div class="route-badge" style="background-color: ${lineInfo.color}; color: ${textColor};">
+                                         <span class="material-symbols-outlined text-sm">${icon}</span>
+                                         <span>${lineInfo.name}</span>
+                                     </div>
+                                     <span class="ml-2 text-gray-600">to ${endStation}</span>
+                                     <div class="text-sm text-gray-500 mt-1 flex items-center gap-1">
+                                         <span class="material-symbols-outlined text-base">schedule</span>
+                                         <span>${freqText}</span>
+                                     </div>
+                                 </div>
+                                 ${intermediateStops.length > 0 ? `
+                                 <div class="relative">
+                                     <button class="toggle-stops text-sm text-blue-600 hover:underline my-2" data-target="stops-${index}">
+                                        Show ${intermediateStops.length} intermediate stop(s) <span class="arrow font-sans">&#9662;</span>
+                                     </button>
+                                     <div id="stops-${index}" class="hidden my-2 -ml-10">
+                                         ${intermediateStops.map(stop => `
+                                             <div class="timeline-item">
+                                                  <div class="timeline-connector">
+                                                     <div class="timeline-line" style="background-color: ${lineInfo.color}; top: 0; bottom: 0;"></div>
+                                                     <div class="intermediate-dot" style="border-color: ${lineInfo.color};"></div>
+                                                  </div>
+                                                 <div class="timeline-content"><div class="text-gray-700 text-sm">${locationMap.get(stop) || stop}</div></div>
+                                             </div>
+                                         `).join('')}
+                                     </div>
+                                 </div>
+                                 ` : ''}
+                             </div>
+                         </div>`;
 
             } else if (segment.type === 'osi' || segment.type === 'transfer' || segment.type === 'thru') {
                 const isOsi = segment.type === 'osi';
@@ -376,56 +444,55 @@
                 const icon = isOsi ? 'directions_walk' : 'transfer_within_a_station';
                 const stationName = locationMap.get(segment.at || segment.from);
 
-                const prevRide = processedSegments[index-1];
-                const prevLineInfo = prevRide ? (lineMap.get(prevRide.line) || { name: prevRide.line, color: '#cccccc'}) : {color: '#cccccc', name: ''};
+                const prevRide = processedSegments[index - 1];
+                const prevLineInfo = prevRide ? (lineMap.get(prevRide.line) || { name: prevRide.line, color: '#cccccc' }) : { color: '#cccccc', name: '' };
 
                 if (!isThru) {
                     let lineTop = (index === 0 && isOsi) ? '50%' : '0';
                     html += `<div class="timeline-item">
-                                 <div class="timeline-connector">
-                                    <div class="timeline-line" style="background-color: ${prevLineInfo.color}; top: ${lineTop}; bottom: 50%;"></div>
-                                    <div class="timeline-dot" style="border-color: ${prevLineInfo.color};"></div>
-                                </div>
-                                <div class="timeline-content station-content"><div class="font-bold text-xl">${stationName}</div></div>
-                             </div>`;
+                                  <div class="timeline-connector">
+                                     <div class="timeline-line" style="background-color: ${prevLineInfo.color}; top: ${lineTop}; bottom: 50%;"></div>
+                                     <div class="timeline-dot" style="border-color: ${prevLineInfo.color};"></div>
+                                 </div>
+                                 <div class="timeline-content station-content"><div class="font-bold text-xl">${stationName}</div></div>
+                              </div>`;
                 }
 
-                const connectorStyle = isThru
-                    ? `background: linear-gradient(${prevLineInfo.color}, ${lineMap.get(segment.toLine).color}); top: -1.5rem; bottom: -1.5rem;`
-                    : 'border-left: 4px dashed #cbd5e0; top: -1.5rem; bottom: -1.5rem;';
+                const connectorStyle = isThru ?
+                    `background: linear-gradient(${prevLineInfo.color}, ${lineMap.get(segment.toLine).color}); top: -1.5rem; bottom: -1.5rem;` :
+                    'border-left: 4px dashed #cbd5e0; top: -1.5rem; bottom: -1.5rem;';
 
                 html += `<div class="timeline-item" style="min-height: 4rem;">
-                            <div class="timeline-connector">
-                                <div class="timeline-line" style="${connectorStyle}"></div>
-                            </div>
-                            <div class="timeline-content">
-                                 <div class="flex items-center gap-2 h-full">
-                                   ${isThru ? '' : `<span class="material-symbols-outlined text-gray-600">${icon}</span>`}
-                                   <span class="font-semibold ${isThru ? 'text-sm italic text-gray-600' : ''}">${text}</span>
-                                </div>
-                            </div>
-                        </div>`;
+                             <div class="timeline-connector">
+                                 <div class="timeline-line" style="${connectorStyle}"></div>
+                             </div>
+                             <div class="timeline-content">
+                                  <div class="flex items-center gap-2 h-full">
+                                    ${isThru ? '' : `<span class="material-symbols-outlined text-gray-600">${icon}</span>`}
+                                    <span class="font-semibold ${isThru ? 'text-sm italic text-gray-600' : ''}">${text}</span>
+                                 </div>
+                             </div>
+                         </div>`;
             }
         });
 
         const lastLeg = processedSegments.at(-1);
         if (lastLeg) {
             const finalStation = locationMap.get(lastLeg.stops ? lastLeg.stops.at(-1) : lastLeg.to);
-            let finalLineInfo = {color: '#cbd5e0'};
+            let finalLineInfo = { color: '#cbd5e0' };
 
             if (lastLeg.type === 'ride') {
                 finalLineInfo = lineMap.get(lastLeg.line) || { name: lastLeg.line, color: '#cccccc' };
             }
 
             html += `<div class="timeline-item">
-                        <div class="timeline-connector">
-                           <div class="timeline-line" style="background-color: ${finalLineInfo.color}; top: 0; bottom: 50%;"></div>
-                           <div class="timeline-dot" style="border-color: ${finalLineInfo.color};"></div>
-                        </div>
-                        <div class="timeline-content station-content"><div class="font-bold text-xl">${finalStation}</div></div>
-                     </div>`;
+                         <div class="timeline-connector">
+                            <div class="timeline-line" style="background-color: ${finalLineInfo.color}; top: 0; bottom: 50%;"></div>
+                            <div class="timeline-dot" style="border-color: ${finalLineInfo.color};"></div>
+                         </div>
+                         <div class="timeline-content station-content"><div class="font-bold text-xl">${finalStation}</div></div>
+                      </div>`;
         }
-
 
         resultsContainer.innerHTML = html;
         document.querySelectorAll('.toggle-stops').forEach(button => {
@@ -434,7 +501,7 @@
                 const targetEl = document.getElementById(targetId);
                 const arrow = button.querySelector('.arrow');
                 const isHidden = targetEl.classList.contains('hidden');
-                if(isHidden) {
+                if (isHidden) {
                     targetEl.classList.remove('hidden');
                     button.childNodes[0].nodeValue = `Hide ${targetEl.children.length} intermediate stop(s) `;
                     arrow.innerHTML = '&#9652;';
@@ -488,5 +555,5 @@
 </script>
 
 </body>
-</html>
 
+</html>
