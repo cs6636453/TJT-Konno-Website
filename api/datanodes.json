@@ -186,8 +186,8 @@
 
   "PPL": {
     "SNR": { "lines": ["KM"], "flags": "", "freq": 8 },
-    "NTX": { "lines": ["TJ"], "flags": "", "freq": 8 },
-    "CUD": { "lines": ["CD"], "flags": "", "freq": 8 },
+    "NTX": { "lines": ["TJ"], "flags": "thru", "freq": 8 },
+    "CUD": { "lines": ["CD"], "flags": "thru", "freq": 8 },
     "MNG": { "lines": ["TJE"], "flags": "", "freq": 999 }
   },
 

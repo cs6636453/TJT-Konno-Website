@@ -128,25 +128,25 @@
     { "key": "0043", "name": "Twyford-upon-Thaime Ter." }
   ],
   "routes": [
-    { "key": "ILL", "name": "Island Loop Line" },
-    { "key": "EW", "name": "Tozai Line" },
-    { "key": "KM", "name": "Keishin Line" },
-    { "key": "LP", "name": "Lipan Line" },
-    { "key": "LPB", "name": "Lipan Line (Citadel Branch)"},
-    { "key": "NK", "name": "Namboku Line" },
-    { "key": "TJ", "name": "Tennoji Line" },
-    { "key": "TJE", "name": "Tennoji Line" },
-    { "key": "CD", "name": "Chiyoda Line" },
-    { "key": "QY", "name": "Katsuragi-Leighstrand Shuttle (Quay Line)" },
-    { "key": "TK", "name": "Tokaido Line" },
-    { "key": "KK", "name": "Kotoha Line" }
+    { "key": "ILL", "name": "Island Loop Line", "color": "#e18700" },
+    { "key": "EW", "name": "Tozai Line", "color": "#00ffaa" },
+    { "key": "KM", "name": "Keishin Line", "color": "#00aaff" },
+    { "key": "LP", "name": "Lipan Line", "color": "#ee2222" },
+    { "key": "LPB", "name": "Lipan Line (Citadel Branch)", "color": "#ee2222" },
+    { "key": "NK", "name": "Namboku Line", "color": "#00cc00" },
+    { "key": "TJ", "name": "Tennoji Line", "color": "#008800" },
+    { "key": "TJE", "name": "Tennoji Line", "color": "#008800" },
+    { "key": "CD", "name": "Chiyoda Line", "color": "#ffde00" },
+    { "key": "QY", "name": "Katsuragi-Leighstrand Shuttle (Quay Line)", "color": "#991177" },
+    { "key": "TK", "name": "Tokaido Line", "color": "#8b4513" },
+    { "key": "KK", "name": "Kotoha Line", "color": "#5a9dff" }
   ],
   "bus_routes": [
-    { "key": "M1", "name": "Mizuno BRT (M1)" },
-    { "key": "M6", "name": "Bus M6" },
-    { "key": "M7", "name": "Bus M7" },
-    { "key": "M9", "name": "Songtaew M9" },
-    { "key": "L41", "name": "Namboku - Lipan Line Bridging Bus" },
-    { "key": "E17", "name": "Bus E17" }
+    { "key": "M1", "name": "Mizuno BRT (M1)", "color": "#2373eb" },
+    { "key": "M6", "name": "Bus M6", "color": "#2373eb" },
+    { "key": "M7", "name": "Bus M7", "color": "#2373eb" },
+    { "key": "M9", "name": "Songtaew M9", "color": "#db250d" },
+    { "key": "L41", "name": "Namboku - Lipan Line Bridging Bus", "color": "#3b3b3b" },
+    { "key": "E17", "name": "Bus E17", "color": "#3b3b3b" }
   ]
 }

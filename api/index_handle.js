@@ -6,6 +6,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const originKey = document.getElementById("trip_origin_key");
     const destKey = document.getElementById("trip_dest_key");
     const form = document.getElementById("trip_form");
+    const backBtn = document.getElementById("backToTop");
+    let lastScrollTop = 0; // For detecting scroll direction
 
     // Fetch JSON dataset
     fetch("/api/dataset.json")
@@ -47,25 +49,29 @@ document.addEventListener("DOMContentLoaded", () => {
         if (originObj) originKey.value = originObj.key;
         if (destObj) destKey.value = destObj.key;
 
-        // Optional: prevent submit if invalid
         if (!originObj || !destObj) {
             e.preventDefault();
             alert("Origin or destination invalid!");
         }
     });
 
-    // Show button when scrolling down
-    window.onscroll = function() {
-        const btn = document.getElementById("backToTop");
-        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
-            btn.style.display = "block";
-        } else {
-            btn.style.display = "none";
-        }
-    };
+    // Show back button only when scrolling up past 200px
+    window.addEventListener("scroll", () => {
+        const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
 
-// Scroll to top on click
-    document.getElementById("backToTop").addEventListener("click", () => {
+        if (currentScroll < lastScrollTop && currentScroll > 200) {
+            // Scrolling up
+            backBtn.style.display = "block";
+        } else {
+            // Scrolling down or near top
+            backBtn.style.display = "none";
+        }
+
+        lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // Avoid negative scroll
+    });
+
+    // Scroll to top on click
+    backBtn?.addEventListener("click", () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 });
