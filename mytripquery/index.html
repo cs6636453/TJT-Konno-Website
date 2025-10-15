@@ -195,7 +195,7 @@
                 const availableLines = Array.isArray(connection.lines) ? connection.lines : [connection.lines];
 
                 for (const nextLine of availableLines) {
-                    const isThru = !!(connection.flags?.includes("thru") && ((currentLine === 'CD' && nextLine === 'TJ') || (currentLine === 'TJ' && nextLine === 'CD')));
+                    const isThru = !!(connection.flags?.includes("thru") && ((currentLine === 'CY' && nextLine === 'TJ') || (currentLine === 'TJ' && nextLine === 'CY')));
 
                     let transferCost = 0;
                     if (currentLine !== null && String(nextLine) !== String(currentLine) && !isThru) {
@@ -227,7 +227,7 @@
                 ? currentLine
                 : availableLines.sort((a, b) => linePriority.indexOf(a) - linePriority.indexOf(b))[0];
 
-            const isThruService = !!(connection.flags?.includes("thru") && ((currentLine === 'CD' && chosenLine === 'TJ') || (currentLine === 'TJ' && chosenLine === 'CD')));
+            const isThruService = !!(connection.flags?.includes("thru") && ((currentLine === 'CY' && chosenLine === 'TJ') || (currentLine === 'TJ' && chosenLine === 'CY')));
 
             if (currentLine !== null && String(currentLine) !== String(chosenLine) && !isThruService) {
                 transfers++;

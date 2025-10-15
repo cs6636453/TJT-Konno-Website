@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const statusIds = [
             "KK", "M1", "M2", "M3", "M6", "M7", "M4", "M5", "M8", "M9",
             "L41", "E17", "E23", "E134", "EW", "KM", "LP", "NK", "TN",
-            "CD", "QY", "TK", "NE", "SC", "CTT1", "CTT2"
+            "CY", "QY", "TK", "NE", "SC", "CTT1", "CTT2"
         ];
 
         const statusClasses = ['bg-green', 'bg-orange', 'bg-red', 'bg-gray'];

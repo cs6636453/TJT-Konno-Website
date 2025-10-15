@@ -187,7 +187,7 @@
   "PPL": {
     "SNR": { "lines": ["KM"], "flags": "", "freq": 8 },
     "NTX": { "lines": ["TN"], "flags": "thru", "freq": 8 },
-    "CUD": { "lines": ["CD"], "flags": "thru", "freq": 8 },
+    "CUD": { "lines": ["CY"], "flags": "thru", "freq": 8 },
     "MNG": { "lines": ["TNE"], "flags": "", "freq": 999 }
   },
 
@@ -265,22 +265,22 @@
   },
 
   "CUD": {
-    "PPL": { "lines": ["CD"], "flags": "", "freq": 8 },
-    "EGT": { "lines": ["CD"], "flags": "", "freq": 8 }
+    "PPL": { "lines": ["CY"], "flags": "", "freq": 8 },
+    "EGT": { "lines": ["CY"], "flags": "", "freq": 8 }
   },
 
   "EGT": {
-    "CUD": { "lines": ["CD"], "flags": "", "freq": 8 },
-    "KPK": { "lines": ["CD"], "flags": "", "freq": 8 }
+    "CUD": { "lines": ["CY"], "flags": "", "freq": 8 },
+    "KPK": { "lines": ["CY"], "flags": "", "freq": 8 }
   },
 
   "EPR": {
-    "KPK": { "lines": ["CD"], "flags": "", "freq": 8 }
+    "KPK": { "lines": ["CY"], "flags": "", "freq": 8 }
   },
 
   "KPK": {
-    "EGT": { "lines": ["CD"], "flags": "", "freq": 8 },
-    "EPR": { "lines": ["CD"], "flags": "", "freq": 8 },
+    "EGT": { "lines": ["CY"], "flags": "", "freq": 8 },
+    "EPR": { "lines": ["CY"], "flags": "", "freq": 8 },
     "KYB": { "lines": ["TK"], "flags": "", "freq": 999 },
     "SNS": { "lines": ["TK"], "flags": "", "freq": 999 }
   },

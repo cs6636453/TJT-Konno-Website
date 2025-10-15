@@ -136,7 +136,7 @@
     { "key": "NK", "name": "Namboku Line", "color": "#00cc00" },
     { "key": "TN", "name": "Tennoji Line", "color": "#008800" },
     { "key": "TNE", "name": "Tennoji Line", "color": "#008800" },
-    { "key": "CD", "name": "Chiyoda Line", "color": "#ffde00" },
+    { "key": "CY", "name": "Chiyoda Line", "color": "#ffde00" },
     { "key": "QY", "name": "Katsuragi-Leighstrand Shuttle (Quay Line)", "color": "#991177" },
     { "key": "TK", "name": "Tokaido Line", "color": "#8b4513" },
     { "key": "KK", "name": "Kotoha Line", "color": "#5a9dff" }
