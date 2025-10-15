@@ -142,10 +142,10 @@
         console.log(`Starting search from ${start} to ${end} with criteria: '${criteria}'`);
 
         const costs = {
-            'less-stations': { station: 1, transfer: 10, bus: 5, bus_transfer: 15, manual: 5, manual_bus: 15, osi: 30 },
+            'less-stations': { station: 3, transfer: 10, bus: 10, bus_transfer: 15, manual: 5, manual_bus: 15, osi: 20 },
             // INCREASED transfer scores to make the algorithm prioritize direct routes.
-            'mintrans': { station: 1, transfer: 150, bus: 5, bus_transfer: 200, manual: 5, manual_bus: 15, osi: 250 },
-            'fastest': { station: 1, transfer: 4, bus: 2, bus_transfer: 6, manual: 10, manual_bus: 15, osi: 8 }
+            'mintrans': { station: 3, transfer: 150, bus: 15, bus_transfer: 200, manual: 5, manual_bus: 15, osi: 250 },
+            'fastest': { station: 3, transfer: 4, bus: 8, bus_transfer: 6, manual: 10, manual_bus: 15, osi: 20 }
         };
 
         const activeCosts = costs[criteria] || costs['fastest'];
@@ -558,4 +558,6 @@
 </body>
 
 </html>
+
+
 
