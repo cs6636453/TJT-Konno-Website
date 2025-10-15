@@ -1,6 +1,7 @@
 {
   "YJJ": {
-    "IND": { "lines": ["ILL"], "flags": "", "freq": 4 }
+    "IND": { "lines": ["ILL"], "flags": "", "freq": 4 },
+    "BID": { "lines": ["EW"], "flags": "", "freq": 8}
   },
 
   "IND": {
@@ -99,7 +100,8 @@
   },
 
   "SKE": {
-    "UNI": { "lines": ["KM"], "flags": "", "freq": 8 }
+    "UNI": { "lines": ["KM"], "flags": "", "freq": 8 },
+    "NKN": { "lines": ["KM"], "flags": "", "freq": 8 }
   },
 
   "SAJ": {

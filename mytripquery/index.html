@@ -142,58 +142,45 @@
         console.log(`Starting search from ${start} to ${end} with criteria: '${criteria}'`);
 
         const costs = {
-            // Config for 'Minimum Stations'
-            'less-stations': {
-                station: 1,
-                transfer: 10,
-                bus: 5,
-                bus_transfer: 15,
-                manual: 5,
-                manual_bus: 15,
-                osi: 30,
-            },
-            // Config for 'Minimum Transfers'
-            'mintrans': {
-                station: 1,
-                transfer: 50,
-                bus: 5,
-                bus_transfer: 75,
-                manual: 5,
-                manual_bus: 15,
-                osi: 100,
-            },
-            // Fallback / Default (e.g., for 'fastest')
-            'fastest': {
-                station: 1, // Each station takes time
-                transfer: 4, // Transfers take time
-                bus: 2, // Buses might be slower
-                bus_transfer: 6,
-                manual: 10, // Manual services have high wait times
-                manual_bus: 15,
-                osi: 8, // Walking takes time
-            }
+            'less-stations': { station: 1, transfer: 10, bus: 5, bus_transfer: 15, manual: 5, manual_bus: 15, osi: 30 },
+            // INCREASED transfer scores to make the algorithm prioritize direct routes.
+            'mintrans': { station: 1, transfer: 150, bus: 5, bus_transfer: 200, manual: 5, manual_bus: 15, osi: 250 },
+            'fastest': { station: 1, transfer: 4, bus: 2, bus_transfer: 6, manual: 10, manual_bus: 15, osi: 8 }
         };
 
         const activeCosts = costs[criteria] || costs['fastest'];
         console.log("Using cost profile:", activeCosts);
 
-        // Priority queue stores { cost, path, line }
-        const pq = [{ cost: 0, path: [start], line: null }];
-        // Visited map stores the minimum cost to reach a node on a specific line
+        // PATH STRUCTURE CHANGED: path is now an array of {station, line} objects
+        const pq = [{ cost: 0, path: [{ station: start, line: null }], line: null }];
         const visited = new Map();
+        const solutions = []; // Store all found paths to the destination
 
-        while (pq.length > 0) {
-            // Sort to simulate a priority queue (lowest cost first)
+        const MAX_ITERATIONS = 20000; // Safety break to prevent infinite loops in complex graphs
+        let iterations = 0;
+
+        while (pq.length > 0 && iterations < MAX_ITERATIONS) {
+            iterations++;
             pq.sort((a, b) => a.cost - b.cost);
             const { cost, path, line: currentLine } = pq.shift();
-            const currentNode = path.at(-1);
+            // Get the station key from the last object in the path
+            const currentNode = path.at(-1).station;
 
-            if (currentNode === end) {
-                console.log("Path found!", { path, cost });
-                return path; // Path found, return it
+            // Pruning: If the current path is already much worse than our best found solution, stop.
+            if (solutions.length > 0 && cost > solutions[0].cost * 2.0) { // Made pruning less aggressive
+                continue;
             }
 
-            // Optimization: if we've found a cheaper way to get to this node on this line, skip
+            if (currentNode === end) {
+                console.log(`%cSolution found! (Cost: ${cost})`, 'color: green;', path.map(p => p.station).join(' -> '));
+                solutions.push({ cost, path });
+                solutions.sort((a, b) => a.cost - b.cost);
+                if (solutions.length > 10) {
+                    solutions.pop();
+                }
+                continue; // Continue searching for other, potentially better, paths
+            }
+
             const visitedKey = `${currentNode}-${currentLine}`;
             if (visited.has(visitedKey) && visited.get(visitedKey) <= cost) {
                 continue;
@@ -201,32 +188,26 @@
             visited.set(visitedKey, cost);
 
             const neighbors = connectionsData[currentNode];
-            if (!neighbors) continue;
+            if (!neighbors) {
+                console.warn(`No neighbors found for node: ${currentNode}`);
+                continue;
+            }
 
-            // Explore neighbors
             for (const neighborKey in neighbors) {
-                if (path.includes(neighborKey)) continue;
-
                 const connection = neighbors[neighborKey];
                 const availableLines = Array.isArray(connection.lines) ? connection.lines : [connection.lines];
 
-                // --- NEW: Iterate over all possible lines for this connection ---
                 for (const nextLine of availableLines) {
                     let newCost = cost;
                     let stepBreakdown = [`From ${currentNode} to ${neighborKey} on line ${nextLine}`];
 
-                    // 1. Base cost for traversing one station
                     newCost += activeCosts.station;
                     stepBreakdown.push(`+${activeCosts.station} (station)`);
 
-                    // 2. Check for Out-of-Station Interchange (OSI)
                     if (String(nextLine) === "0") {
                         newCost += activeCosts.osi;
                         stepBreakdown.push(`+${activeCosts.osi} (OSI)`);
-                    }
-                    // 3. Check for regular transfers
-                    else if (currentLine !== null && String(nextLine) !== String(currentLine)) {
-                        // Check for special "thru" service (CY <-> TJ)
+                    } else if (currentLine !== null && String(nextLine) !== String(currentLine)) {
                         const isThru = connection.flags?.includes("thru") &&
                             ((currentLine === 'CY' && nextLine === 'TN') ||
                                 (currentLine === 'TN' && nextLine === 'CY'));
@@ -246,14 +227,12 @@
                         }
                     }
 
-                    // 4. Add penalties for route type
                     const isNextLineBus = isBusRoute.has(nextLine);
                     if (isNextLineBus) {
                         newCost += activeCosts.bus;
                         stepBreakdown.push(`+${activeCosts.bus} (bus route)`);
                     }
 
-                    // 5. Add penalties for manual service
                     if (connection.freq === 999) {
                         if (isNextLineBus) {
                             newCost += activeCosts.manual_bus;
@@ -264,48 +243,70 @@
                         }
                     }
 
-                    console.log(stepBreakdown.join(' '));
-
-                    // Add the new path option to the priority queue
-                    pq.push({ cost: newCost, path: [...path, neighborKey], line: nextLine });
+                    // Add new detailed path object to the queue
+                    const newPath = [...path, { station: neighborKey, line: nextLine }];
+                    pq.push({ cost: newCost, path: newPath, line: nextLine });
                 }
             }
         }
 
-        console.log("No path found.");
-        return null; // No path found
+        if (iterations >= MAX_ITERATIONS) {
+            console.warn("Search terminated after reaching maximum iterations.");
+        }
+
+        if (solutions.length > 0) {
+            console.log(`Found ${solutions.length} possible routes. Selecting the best one.`, solutions);
+            return solutions[0].path; // Return the path of the best solution found
+        }
+
+        console.log("No path found after exhaustive search.");
+        return null;
+    }
+
+    function calculatePathDetails(detailedPath) {
+        if (!detailedPath) return null;
+
+        // This function is now simpler as it receives the exact line choices.
+        const path = detailedPath.map(p => p.station); // Get a simple list of station keys for counting
+        let transfers = 0;
+        const legs = [];
+        let lastRealLine = null;
+
+        for (let i = 1; i < detailedPath.length; i++) {
+            const fromStation = detailedPath[i-1].station;
+            const toStation = detailedPath[i].station;
+            const line = detailedPath[i].line;
+            const connection = connectionsData[fromStation][toStation];
+
+            if (String(line) === "0") {
+                lastRealLine = null; // An OSI resets the current line
+            }
+
+            const isThruService = !!(connection.flags?.includes("thru") && lastRealLine && ((lastRealLine === 'CY' && line === 'TN') || (lastRealLine === 'TN' && line === 'CY')));
+
+            // A transfer happens if the line changes, it's not the start, not an OSI, and not a thru service
+            if (lastRealLine && line !== lastRealLine && String(line) !== "0" && !isThruService) {
+                transfers++;
+            }
+
+            legs.push({
+                from: fromStation,
+                to: toStation,
+                line: line,
+                freq: connection.freq,
+                isThru: isThruService
+            });
+
+            if (String(line) !== "0") {
+                lastRealLine = line;
+            }
+        }
+
+        return { path, legs, transfers, stationCount: path.length };
     }
 
     // --- END OF MODIFIED CODE ---
 
-
-    function calculatePathDetails(path) {
-        if (!path) return null;
-        let transfers = 0;
-        let currentLine = null;
-        const legs = [];
-
-        for (let i = 0; i < path.length - 1; i++) {
-            const from = path[i];
-            const to = path[i + 1];
-            const connection = connectionsData[from][to];
-            const availableLines = Array.isArray(connection.lines) ? [...connection.lines] : [connection.lines];
-
-            let chosenLine = availableLines.includes(currentLine) ?
-                currentLine :
-                availableLines.sort((a, b) => linePriority.indexOf(a) - linePriority.indexOf(b))[0];
-
-            const isThruService = !!(connection.flags?.includes("thru") && ((currentLine === 'CY' && chosenLine === 'TN') || (currentLine === 'TN' && chosenLine === 'CY')));
-
-            if (currentLine !== null && String(currentLine) !== String(chosenLine) && !isThruService) {
-                transfers++;
-            }
-            currentLine = chosenLine;
-
-            legs.push({ from, to, line: chosenLine, freq: connection.freq, isThru: isThruService });
-        }
-        return { path, legs, transfers, stationCount: path.length };
-    }
 
     function getFrequencyText(freq) {
         if (freq === 0) return "Semi-Auto service, find a button nearby to request for or use warp-sign inside the service.";
@@ -557,3 +558,4 @@
 </body>
 
 </html>
+
