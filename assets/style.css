@@ -561,6 +561,8 @@ section#page_not_found {
 fieldset.trip_planner {
 margin-left: 10px;
 margin-right: 10px;
+padding-left: 10px;
+padding-right: 10px;
 }
 
     /* --- Input Fields and Labels --- */
