@@ -620,4 +620,11 @@ section#page_not_found {
     #colorscheme ul {
         margin-left: 0;
     }
+
+main #wasabico div img, main #b41 div img,
+main #tjtbus div img, main #konno24 div img,
+main article div img{
+    height: 168px;
+    width: 300px;
+}
 }
