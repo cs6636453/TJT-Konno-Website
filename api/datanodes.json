@@ -118,7 +118,7 @@
   "TWF": {
     "BPR": { "lines": ["TK", "KK"], "flags": "", "freq": 999 },
     "MNG": { "lines": ["TK", "KK"], "flags": "", "freq": 999 },
-    "0043": { "lines": [0], "flags": "", "freq": 0 }
+    "0043": { "lines": [1], "flags": "", "freq": 0 }
   },
 
   "BPR": {
@@ -370,7 +370,7 @@
   "MFL": {
     "BWD": { "lines": ["TK","KK"], "flags": "", "freq": 999 },
     "KTH": { "lines": ["KK"], "flags": "", "freq": 999 },
-    "0033": { "lines": [0], "flags": "", "freq": 0 }
+    "0033": { "lines": [1], "flags": "", "freq": 0 }
   },
 
   "KTH": {
@@ -431,7 +431,7 @@
   "0033": {
     "0038": { "lines": ["M1"], "flags": "", "freq": 8 },
     "0019": { "lines": ["M6"], "flags": "", "freq": 0 },
-    "MFL": { "lines": [0], "flags": "", "freq": 0 }
+    "MFL": { "lines": [1], "flags": "", "freq": 0 }
   },
 
   "0038": {
@@ -539,7 +539,7 @@
   },
 
   "0043": {
-    "EMN": { "lines": [0], "flags": "", "freq": 0 }
+    "EMN": { "lines": [1], "flags": "", "freq": 0 }
   },
 
   "0040": {

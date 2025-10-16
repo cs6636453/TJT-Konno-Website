@@ -31,6 +31,17 @@ section.banner {
     position: relative;       /* needed for absolute positioning of span */
 }
 
+section.banner-text {
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;  /* center the image horizontally */
+    align-items: center;      /* vertically center */
+    position: relative;       /* needed for absolute positioning of span */
+    text-align: center;
+    background-color: #ffcc00;
+}
+
 section.banner img {
     max-height: 100%;
     height: 100px;
@@ -42,9 +53,16 @@ section.banner span {
     font-size: 24px;
     position: absolute;       /* position relative to banner */
     right: 50px;              /* distance from right edge */
-    top: 50px;                 /* vertical center */
-    transform: translateY(-50%);
     color: darkcyan;
+    cursor: pointer;
+    z-index: 2;               /* make sure span is above image */
+}
+
+section.banner-text span {
+    font-weight: bold;
+    font-size: 24px;
+    position: absolute;       /* position relative to banner */
+    right: 50px;              /* distance from right edge */
     cursor: pointer;
     z-index: 2;               /* make sure span is above image */
 }
@@ -107,22 +125,42 @@ footer p.disclaimer {
     color: lightgray;
 }
 
-main #service_status, main #trip_planner, main #wasabico, main #b41, main #tjtbus, main #konno24, main #iciwi {
+main #service_status, main #trip_planner, main #wasabico,
+main #b41, main #tjtbus, main #konno24, main #iciwi,
+main #colorscheme, main article {
     padding: 25px 50px;
     background-color: white;
     color: black;
 }
 
-main #wasabico div, main #b41 div, main #tjtbus div, main #konno24 div {
+main #wasabico div, main #b41 div, main #tjtbus div, main #konno24 div,
+main article div {
     display: flex;
 }
 
-main #wasabico div img, main #b41 div img, main #tjtbus div img, main #konno24 div img {
+#iciwi p {
+    color: gray;
+}
+
+#iciwi p a {
+    text-decoration: none;
+    color: darkcyan;
+    text-underline: darkcyan;
+}
+
+#colorscheme ul {
+    margin-left: 20px;
+}
+
+main #wasabico div img, main #b41 div img,
+main #tjtbus div img, main #konno24 div img,
+main article div img{
     height: auto;
     width: 30%;
 }
 
-main #wasabico div p, main #b41 div p, main #tjtbus div p, main #konno24 div p {
+main #wasabico div p, main #b41 div p, main #tjtbus div p, main #konno24 div p,
+main article div p {
     margin-right: 25px;
     margin-left: 25px;
 }

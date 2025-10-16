@@ -45,6 +45,11 @@
     </nav>
 
     <main>
+        <section class="banner-text" id="ad3">
+            <p>Our website may change to domain tjtkonno.net after 31st October 2025, stay tuned!</p>
+            <span class="material-symbols-outlined" onclick="close_banner('ad3')">close</span>
+        </section>
+
         <section class="banner" id="ad1">
             <img src="assets/banners/ad1.png" alt="Truth From Thailand">
             <span class="material-symbols-outlined" onclick="close_banner('ad1')">close</span>
@@ -205,6 +210,16 @@
             </form>
         </section>
 
+        <section id="iciwi">
+            <h1>Query my IC card</h1>
+            <form action="https://bluemap.limaru.net/iciwi/iciwi.html" method="GET">
+                <label for="iciwi_query">Enter your IC card number:</label>
+                <input type="text" id="iciwi_query" placeholder="Bx-xxxxx" name="serial" pattern="[A-B][A-Z]-[0-9]{1,5}" required>
+                <input type="submit" value="Query" id="querysubmit">
+            </form>
+            <p>Quick Note: You can bind your card and always check full journey <a href="https://bluemap.limaru.net/iciwi/">click here</a>!</p>
+        </section>
+
         <section id="wasabico">
             <h1>Wasabi Card</h1>
             <div class="content">
@@ -220,66 +235,16 @@
             </div>
         </section>
 
-        <section id="iciwi">
-            <h1>Query my IC card</h1>
-            <form action="https://bluemap.limaru.net/iciwi/iciwi.html" method="GET">
-                <label for="iciwi_query">Enter your IC card number:</label>
-                <input type="text" id="iciwi_query" placeholder="Bx-xxxxx" name="serial" pattern="[A-B][A-Z]-[0-9]{1,5}" required>
-                <input type="submit" value="Query" id="querysubmit">
-            </form>
-        </section>
 
-        <section id="b41">
-            <h1>TJT B41 Train</h1>
-            <div class="content">
-                <img src="assets/images/b41.png" alt="B41 Train of TJT">
-                <p>We are proud to introduce the all-new B41 train, the latest advancement in Limaru's public transit,
-                    built by the renowned Konno Heavy Industries in Chitose. As the most modern train in our fleet,
-                    the B41 is equipped with the newest technology, including comprehensive CCTV coverage,
-                    a crystal-clear speaker system, and dynamic in-car displays for passenger information.
-                    This new series will serve the Kotoha Line, connecting Shinten to Sumiyoshi and stopping
-                    at major stations such as Twyford, Mizuno Filius, Chitose, and Kimitsu. During peak hours,
-                    a special "Yamabiko" limited-stop service will also be available, serving Mizuna, Gojo, and Katsuragi.
-                    Furthermore, the B41's exceptional design has led to its adoption internationally,
-                    with an export variant, the B43, now serving the Island Loop Line for the YJJ City MRT.
-                </p>
-            </div>
-        </section>
 
-        <section id="tjtbus">
-            <h1>TJT Bus Services</h1>
-            <div class="content">
-                <p>In addition to its rail network, TJT operates a comprehensive and modern fleet of bus services,
-                    primarily based in the city of Mizuno. A key feature of this network is the premium <b>Emmaru BRT</b>
-                    (Bus Rapid Transit), which includes express routes BRT-2 and BRT-3, efficiently connecting Mizuno
-                    and Katsuragi via Iwanoyuki. For travelers, TJT also offers a convenient direct bus service between
-                    <b>Lipan Airport and the Mizuno Pater district</b>. <br><br>
 
-                    Reflecting a commitment to sustainability and passenger comfort, our entire bus fleet is powered by clean hydrogen technology and equipped with modern amenities such as in-car passenger information displays and automated announcements. For seamless travel, all buses accept payments from any standard IC card.
-                </p>
-                <img src="assets/images/tjtbus.png" alt="TJT M43 Buses">
-            </div>
-        </section>
-
-        <section id="konno24">
-            <h1>Plazma GO!</h1>
-            <div class="content">
-                <img src="assets/images/plazmago.png" alt="Plazma GO!">
-                <p>Beyond its core transportation services, TJT (also known as TJT KDR) has diversified its portfolio by
-                    operating a chain of convenience stores. These outlets, formerly known as <b>KONNO 24</b>, are currently
-                    undergoing a strategic rebranding. They will now operate under the new name <b>Plazma GO!</b>, following a
-                    partnership with or acquisition by the <b>Plazma Hugo Trust</b>. This transition affects all minimarket
-                    locations throughout the Limaru region.
-                </p>
-            </div>
-        </section>
     </main>
 
     <footer>
         <p> <b>TJT</b>, we make you have a better future and living.</p><hr>
         <p class="disclaimer">Disclaimer: Limaru is a city building community based on the video game "Minecraft". Information presented on this website should not be confused with real-world events and information. Limaru is not affiliated with Mojang, Microsoft, or GamerSafer.</p>
         <p class="disclaimer">Not an official Minecraft server. Not approved by or associated with Mojang or Microsoft corporation.</p><hr>
-        <p>&copy 2025 Takarazaki Joint Transport Inc., All rights reserved.</p>
+        <p>&copy 2025 Takarazaki Joint Transport Inc., Konno Pte., Ltd., All rights reserved.</p>
     </footer>
 </body>
 </html>
