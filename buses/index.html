@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../assets/favicon.png">
+    <title>Home | TJT Konno</title>
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@1" rel="stylesheet"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <script src="../api/fetch_status.js"></script>
+    <script src="../api/index_handle.js"></script>
+</head>
+<body>
+
+    <button id="backToTop" title="Back to top">
+        <span class="material-symbols-outlined">keyboard_arrow_up</span>
+    </button>
+
+    <section class="server_ip">
+        <b>IP: play.limaru.net</b> | Java 1.21.4 is recommended | Bedrock Port: 19132
+    </section>
+
+    <section class="icon_header">
+        <a href="#">
+            <img src="../assets/favicon.png" alt="TJT">
+            <h1>TJT Konno</h1>
+        </a>
+    </section>
+
+    <nav>
+        <section class="icon_menu">
+            <a href="../">Home</a>
+            <a href="../kotoha_line/">Kotoha Line</a>
+            <a href="#" class="active">Bus Services</a>
+            <a href="https://bluemap.limaru.net/iciwi/">My Wasabi</a>
+            <a href="../assets/documents/TrenMap.pdf">Network Map</a>
+            <a href="../plazma_go/">Plazma GO!</a>
+            <a href="https://bluemap.limaru.net/">BlueMap</a>
+            <a href="https://limaru.net/">Limaru Website</a>
+            <a href="../about_us/" class="right">Who are we?</a>
+        </section>
+    </nav>
+
+    <main>
+        <section class="banner" id="ad1">
+            <img src="../assets/banners/ad1.png" alt="Truth From Thailand">
+            <span class="material-symbols-outlined" onclick="close_banner('ad1')">close</span>
+        </section>
+
+        <section class="banner" id="ad2">
+            <img src="../assets/banners/ad2.png" alt="Plazma Paradize">
+            <span class="material-symbols-outlined" onclick="close_banner('ad2')">close</span>
+        </section>
+
+    </main>
+
+    <footer>
+        <p> <b>TJT</b>, we make you have a better future and living.</p><hr>
+        <p class="disclaimer">Disclaimer: Limaru is a city building community based on the video game "Minecraft". Information presented on this website should not be confused with real-world events and information. Limaru is not affiliated with Mojang, Microsoft, or GamerSafer.</p>
+        <p class="disclaimer">Not an official Minecraft server. Not approved by or associated with Mojang or Microsoft corporation.</p><hr>
+        <p>&copy 2025 Takarazaki Joint Transport Inc., All rights reserved.</p>
+    </footer>
+</body>
+</html>

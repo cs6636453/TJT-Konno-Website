@@ -107,26 +107,23 @@ footer p.disclaimer {
     color: lightgray;
 }
 
-main #service_status, main #trip_planner, main #wasabico, main #b41 {
+main #service_status, main #trip_planner, main #wasabico, main #b41, main #tjtbus, main #konno24 {
     padding: 25px 50px;
     background-color: white;
     color: black;
 }
 
-main #wasabico div, main #b41 div {
+main #wasabico div, main #b41 div, main #tjtbus div, main #konno24 div {
     display: flex;
 }
 
-main #wasabico div img, main #b41 div img {
+main #wasabico div img, main #b41 div img, main #tjtbus div img, main #konno24 div img {
     height: auto;
     width: 30%;
 }
 
-main #wasabico div p {
+main #wasabico div p, main #b41 div p, main #tjtbus div p, main #konno24 div p {
     margin-right: 25px;
-}
-
-main #b41 div p {
     margin-left: 25px;
 }
 
