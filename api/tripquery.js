@@ -288,19 +288,39 @@ function getFrequencyText(freq) {
     return `Every ${freq} mins`;
 }
 
+/**
+ * Returns the display name of a location, applying abbreviations and truncation rules.
+ * Rules:
+ * 1. Abbreviate "Station" to "Sta." (case-insensitive).
+ * 2. Truncate name at the first '/' (for bus stops).
+ * 3. Truncate name to max 20 characters, splitting cleanly at a space if possible, and appending '...'.
+ */
 function getDisplayName(key) {
     let name = locationMap.get(key) || key;
-    if (window.innerWidth < 640 && name.length > 20) {
-        if (name.includes(' / ')) {
-            return name.split(' / ')[0];
-        }
-        if (name.includes(' ')) {
-            const words = name.split(' ');
-            if (words.length > 1) {
-                return words.slice(0, -1).join(' ');
-            }
+
+    // 1. Abbreviate "Station" to "Sta." (case-insensitive, whole word match)
+    // It matches " Station " or "Station" at the start/end and replaces it with " Sta."
+    name = name.replace(/\bStation\b/gi, 'Sta.');
+
+    // 2. Handle the '/' splitting rule (Show only part before the first /)
+    if (name.includes('/')) {
+        name = name.split('/')[0].trim();
+    }
+
+    // 3. Apply the 20-character limit and truncate cleanly
+    const MAX_LENGTH = 20;
+    if (name.length > MAX_LENGTH) {
+        let truncated = name.substring(0, MAX_LENGTH);
+        // Truncate cleanly at the last space before the limit, if possible
+        let lastSpace = truncated.lastIndexOf(' ');
+
+        if (lastSpace > 0) {
+            name = truncated.substring(0, lastSpace).trim() + '...';
+        } else {
+            name = truncated.trim() + '...';
         }
     }
+
     return name;
 }
 
@@ -325,15 +345,15 @@ function renderTrip(bestPathDetails, isSameStation = false) {
     noResults.classList.add('hidden');
 
     statsContainer.innerHTML = `
-             <div class="flex items-center gap-2">
-                 <span class="material-symbols-outlined">tram</span>
-                 <span>${bestPathDetails.stationCount - 1} stops</span>
-             </div>
-              <div class="flex items-center gap-2">
-                 <span class="material-symbols-outlined">transfer_within_a_station</span>
-                 <span>${bestPathDetails.transfers} transfers</span>
-             </div>
-         `;
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined">tram</span>
+                    <span>${bestPathDetails.stationCount - 1} stops</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined">transfer_within_a_station</span>
+                    <span>${bestPathDetails.transfers} transfers</span>
+                </div>
+            `;
 
     const processedSegments = [];
     if (bestPathDetails.legs.length > 0) {
@@ -402,50 +422,50 @@ function renderTrip(bestPathDetails, isSameStation = false) {
 
             if (!segment.isThruEntry) {
                 html += `<div class="timeline-item">
-                                 <div class="timeline-connector">
-                                     <div class="timeline-line" style="background-color: ${lineInfo.color}; top: 50%; bottom: 0;"></div>
-                                     <div class="timeline-dot" style="border-color: ${lineInfo.color};"></div>
-                                 </div>
-                                 <div class="timeline-content station-content"><div class="font-bold text-xl station-name">${startStation}</div></div>
-                              </div>`;
+                                        <div class="timeline-connector">
+                                            <div class="timeline-line" style="background-color: ${lineInfo.color}; top: 50%; bottom: 0;"></div>
+                                            <div class="timeline-dot" style="border-color: ${lineInfo.color};"></div>
+                                        </div>
+                                        <div class="timeline-content station-content"><div class="font-bold text-xl station-name">${startStation}</div></div>
+                                     </div>`;
             }
 
             html += `<div class="timeline-item">
-                             <div class="timeline-connector">
-                                 <div class="timeline-line" style="background-color: ${lineInfo.color}; top: 0; bottom: 0;"></div>
-                             </div>
-                             <div class="timeline-content">
-                                  <div class="mb-2">
-                                     <div class="route-badge" style="background-color: ${lineInfo.color}; color: ${textColor};">
-                                         <span class="material-symbols-outlined text-sm">${icon}</span>
-                                         <span>${lineInfo.name}</span>
-                                     </div>
-                                     <span class="block md:inline md:ml-2 text-gray-600 mt-1 md:mt-0">to <span class="station-name">${displayDestinationName}</span></span>
-                                     <div class="text-sm text-gray-500 mt-1 flex items-center gap-1">
-                                         <span class="material-symbols-outlined text-base">schedule</span>
-                                         <span>${freqText}</span>
-                                     </div>
-                                 </div>
-                                 ${intermediateStops.length > 0 ? `
-                                 <div class="relative">
-                                     <button class="toggle-stops text-sm text-blue-600 hover:underline my-2" data-target="stops-${index}">
-                                        Show ${intermediateStops.length} intermediate stop(s) <span class="arrow font-sans">&#9662;</span>
-                                     </button>
-                                     <div id="stops-${index}" class="hidden my-2 -ml-10">
-                                         ${intermediateStops.map(stop => `
-                                             <div class="timeline-item">
-                                                  <div class="timeline-connector">
-                                                     <div class="timeline-line" style="background-color: ${lineInfo.color}; top: 0; bottom: 0;"></div>
-                                                     <div class="intermediate-dot" style="border-color: ${lineInfo.color};"></div>
-                                                  </div>
-                                                 <div class="timeline-content"><div class="text-gray-700 text-sm station-name">${getDisplayName(stop)}</div></div>
-                                             </div>
-                                         `).join('')}
-                                     </div>
-                                 </div>
-                                 ` : ''}
-                             </div>
-                         </div>`;
+                                <div class="timeline-connector">
+                                    <div class="timeline-line" style="background-color: ${lineInfo.color}; top: 0; bottom: 0;"></div>
+                                </div>
+                                <div class="timeline-content">
+                                    <div class="mb-2">
+                                        <div class="route-badge" style="background-color: ${lineInfo.color}; color: ${textColor};">
+                                            <span class="material-symbols-outlined text-sm">${icon}</span>
+                                            <span>${lineInfo.name}</span>
+                                        </div>
+                                        <span class="block md:inline md:ml-2 text-gray-600 mt-1 md:mt-0">to <span class="station-name">${displayDestinationName}</span></span>
+                                        <div class="text-sm text-gray-500 mt-1 flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-base">schedule</span>
+                                            <span>${freqText}</span>
+                                        </div>
+                                    </div>
+                                    ${intermediateStops.length > 0 ? `
+                                    <div class="relative">
+                                        <button class="toggle-stops text-sm text-blue-600 hover:underline my-2" data-target="stops-${index}">
+                                            Show ${intermediateStops.length} intermediate stop(s) <span class="arrow font-sans">&#9662;</span>
+                                        </button>
+                                        <div id="stops-${index}" class="hidden my-2 -ml-10">
+                                            ${intermediateStops.map(stop => `
+                                                <div class="timeline-item">
+                                                    <div class="timeline-connector">
+                                                        <div class="timeline-line" style="background-color: ${lineInfo.color}; top: 0; bottom: 0;"></div>
+                                                        <div class="intermediate-dot" style="border-color: ${lineInfo.color};"></div>
+                                                    </div>
+                                                    <div class="timeline-content"><div class="text-gray-700 text-sm station-name">${getDisplayName(stop)}</div></div>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                    ` : ''}
+                                </div>
+                            </div>`;
 
         } else if (segment.type === 'osi' || segment.type === 'transfer' || segment.type === 'thru') {
             const isThru = segment.type === 'thru';
@@ -454,34 +474,35 @@ function renderTrip(bestPathDetails, isSameStation = false) {
             const stationName = getDisplayName(segment.at || segment.from);
 
             const prevRide = processedSegments[index - 1];
-            const prevLineInfo = prevRide ? (lineMap.get(prevRide.line) || { name: prevRide.line, color: '#cccccc' }) : { color: '#cccccc', name: '' };
+            const prevLineInfo = prevRide ? (lineMap.get(prevRide.line) || { name: prevRide.line, color: '#cccccc' }) : { color: '#cbd5e0', name: '' };
+            const nextLineInfo = isThru ? (lineMap.get(segment.toLine) || { color: '#cbd5e0', name: '' }) : { color: '#cbd5e0', name: '' };
 
             if (!isThru) {
                 let lineTop = (index === 0 && segment.type === 'osi') ? '50%' : '0';
                 html += `<div class="timeline-item">
-                                  <div class="timeline-connector">
-                                     <div class="timeline-line" style="background-color: ${prevLineInfo.color}; top: ${lineTop}; bottom: 50%;"></div>
-                                     <div class="timeline-dot" style="border-color: ${prevLineInfo.color};"></div>
-                                 </div>
-                                 <div class="timeline-content station-content"><div class="font-bold text-xl station-name">${stationName}</div></div>
-                              </div>`;
+                                        <div class="timeline-connector">
+                                            <div class="timeline-line" style="background-color: ${prevLineInfo.color}; top: ${lineTop}; bottom: 50%;"></div>
+                                            <div class="timeline-dot" style="border-color: ${prevLineInfo.color};"></div>
+                                        </div>
+                                        <div class="timeline-content station-content"><div class="font-bold text-xl station-name">${stationName}</div></div>
+                                     </div>`;
             }
 
             const connectorStyle = isThru ?
-                `background: linear-gradient(${prevLineInfo.color}, ${lineMap.get(segment.toLine).color}); top: -1.5rem; bottom: -1.5rem;` :
+                `background: linear-gradient(${prevLineInfo.color}, ${nextLineInfo.color}); top: -1.5rem; bottom: -1.5rem;` :
                 'border-left: 4px dashed #cbd5e0; top: -1.5rem; bottom: -1.5rem;';
 
             html += `<div class="timeline-item" style="min-height: 4rem;">
-                             <div class="timeline-connector">
-                                 <div class="timeline-line" style="${connectorStyle}"></div>
-                             </div>
-                             <div class="timeline-content">
-                                  <div class="flex items-center gap-2 h-full">
-                                    ${isThru ? '' : `<span class="material-symbols-outlined text-gray-600">${icon}</span>`}
-                                    <span class="font-semibold ${isThru ? 'text-sm italic text-gray-600' : ''}">${text}</span>
-                                 </div>
-                             </div>
-                         </div>`;
+                                <div class="timeline-connector">
+                                    <div class="timeline-line" style="${connectorStyle}"></div>
+                                </div>
+                                <div class="timeline-content">
+                                    <div class="flex items-center gap-2 h-full">
+                                        ${isThru ? '' : `<span class="material-symbols-outlined text-gray-600">${icon}</span>`}
+                                        <span class="font-semibold ${isThru ? 'text-sm italic text-gray-600' : 'text-gray-700'}">${text}</span>
+                                    </div>
+                                </div>
+                            </div>`;
         }
     });
 
@@ -492,15 +513,22 @@ function renderTrip(bestPathDetails, isSameStation = false) {
 
         if (lastLeg.type === 'ride') {
             finalLineInfo = lineMap.get(lastLeg.line) || { name: lastLeg.line, color: '#cccccc' };
+        } else if (lastLeg.type === 'thru') {
+            // Get the line color from the thru's toLine
+            finalLineInfo = lineMap.get(lastLeg.toLine) || { name: lastLeg.toLine, color: '#cccccc' };
+        } else {
+            // For OSI/Transfer, use the previous ride's line color
+            const prevRide = processedSegments.slice(0, -1).reverse().find(s => s.type === 'ride');
+            finalLineInfo = prevRide ? (lineMap.get(prevRide.line) || { name: prevRide.line, color: '#cccccc' }) : { color: '#cbd5e0' };
         }
 
         html += `<div class="timeline-item">
-                         <div class="timeline-connector">
-                            <div class="timeline-line" style="background-color: ${finalLineInfo.color}; top: 0; bottom: 50%;"></div>
-                            <div class="timeline-dot" style="border-color: ${finalLineInfo.color};"></div>
-                         </div>
-                         <div class="timeline-content station-content"><div class="font-bold text-xl station-name">${finalStation}</div></div>
-                      </div>`;
+                            <div class="timeline-connector">
+                                <div class="timeline-line" style="background-color: ${finalLineInfo.color}; top: 0; bottom: 50%;"></div>
+                                <div class="timeline-dot" style="border-color: ${finalLineInfo.color};"></div>
+                            </div>
+                            <div class="timeline-content station-content"><div class="font-bold text-xl station-name">${finalStation}</div></div>
+                         </div>`;
     }
 
     resultsContainer.innerHTML = html;
@@ -510,13 +538,15 @@ function renderTrip(bestPathDetails, isSameStation = false) {
             const targetEl = document.getElementById(targetId);
             const arrow = button.querySelector('.arrow');
             const isHidden = targetEl.classList.contains('hidden');
+            const count = targetEl.children.length;
+
             if (isHidden) {
                 targetEl.classList.remove('hidden');
-                button.childNodes[0].nodeValue = `Hide ${targetEl.children.length} intermediate stop(s) `;
+                button.childNodes[0].nodeValue = `Hide ${count} intermediate stop(s) `;
                 arrow.innerHTML = '&#9652;';
             } else {
                 targetEl.classList.add('hidden');
-                button.childNodes[0].nodeValue = `Show ${targetEl.children.length} intermediate stop(s) `;
+                button.childNodes[0].nodeValue = `Show ${count} intermediate stop(s) `;
                 arrow.innerHTML = '&#9662;';
             }
         });
@@ -526,6 +556,8 @@ function renderTrip(bestPathDetails, isSameStation = false) {
 async function planTrip() {
     const loading = document.getElementById('loading');
     loading.style.display = 'flex';
+    loading.style.opacity = '1';
+
     try {
         await setupData();
         const { origin, dest, criteria } = getQueryParams();
@@ -535,6 +567,7 @@ async function planTrip() {
 
         if (!origin || !dest || !locationMap.has(origin) || !locationMap.has(dest)) {
             document.getElementById('no-results').textContent = 'Please provide valid origin and destination station/stop keys in the URL query parameters (e.g., ?origin=ECL&dest=KSC).';
+            document.getElementById('no-results').classList.remove('hidden');
             return;
         }
         if (origin === dest) {
@@ -554,6 +587,8 @@ async function planTrip() {
 
     } catch (error) {
         console.error("Trip planning failed:", error);
+        document.getElementById('no-results').textContent = `An unexpected error occurred during trip planning: ${error.message}`;
+        document.getElementById('no-results').classList.remove('hidden');
     } finally {
         loading.style.opacity = '0';
         setTimeout(() => { loading.style.display = 'none'; }, 300);
@@ -561,4 +596,3 @@ async function planTrip() {
 }
 
 window.addEventListener('DOMContentLoaded', planTrip);
-

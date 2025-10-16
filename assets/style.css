@@ -107,7 +107,7 @@ footer p.disclaimer {
     color: lightgray;
 }
 
-main #service_status, main #trip_planner, main #wasabico, main #b41, main #tjtbus, main #konno24 {
+main #service_status, main #trip_planner, main #wasabico, main #b41, main #tjtbus, main #konno24, main #iciwi {
     padding: 25px 50px;
     background-color: white;
     color: black;
@@ -185,6 +185,11 @@ fieldset.trip_planner {
     margin-top: 10px;
 }
 
+#iciwi form {
+    font-size: 18px;
+    margin-top: 10px;
+}
+
 fieldset.trip_planner input.radio {
     width: 14px;
     height: 14px;
@@ -192,6 +197,13 @@ fieldset.trip_planner input.radio {
 
 fieldset.trip_planner input.text {
     width: 300px;
+    height: 32px;
+    font-size: 18px;
+    margin-right: 15px;
+}
+
+#iciwi form input#iciwi_query {
+    width: 100px;
     height: 32px;
     font-size: 18px;
     margin-right: 15px;
@@ -218,7 +230,21 @@ fieldset.trip_planner button.submit {
     z-index: 1000;
 }
 
+#iciwi form input#querysubmit {
+    padding: 7px 10px;
+    font-size: 18px;
+    background-color: darkcyan;
+    color: white;
+    border: none;
+    margin-right: 15px;
+    z-index: 1000;
+}
+
 fieldset.trip_planner label.text {
+    margin-right: 5px;
+}
+
+#iciwi form label {
     margin-right: 5px;
 }
 

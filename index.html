@@ -220,6 +220,15 @@
             </div>
         </section>
 
+        <section id="iciwi">
+            <h1>Query my IC card</h1>
+            <form action="https://bluemap.limaru.net/iciwi/iciwi.html" method="GET">
+                <label for="iciwi_query">Enter your IC card number:</label>
+                <input type="text" id="iciwi_query" placeholder="Bx-xxxxx" name="serial" pattern="[A-B][A-Z]-[0-9]{1,5}" required>
+                <input type="submit" value="Query" id="querysubmit">
+            </form>
+        </section>
+
         <section id="b41">
             <h1>TJT B41 Train</h1>
             <div class="content">
