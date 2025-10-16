@@ -7,7 +7,7 @@
   "IND": {
     "YJJ": { "lines": ["ILL"], "flags": "", "freq": 4 },
     "POH": { "lines": ["ILL"], "flags": "", "freq": 4 },
-    "BID": { "lines": [0], "flags": "", "freq": 0 }
+    "BID": { "lines": [1], "flags": "", "freq": 0 }
   },
 
   "POH": {
@@ -17,7 +17,7 @@
   "BID": {
     "YJJ": { "lines": ["EW"], "flags": "", "freq": 8 },
     "LND": { "lines": ["EW"], "flags": "", "freq": 8 },
-    "IND": { "lines": [0], "flags": "", "freq": 0 }
+    "IND": { "lines": [1], "flags": "", "freq": 0 }
   },
 
   "LND": {

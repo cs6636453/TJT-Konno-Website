@@ -1,0 +1,51 @@
+:root { --panel-width: 380px; }
+html,body { height:100%; margin:0; font-family:Inter,system-ui,Segoe UI,Roboto,Arial; }
+#app { display:grid; grid-template-columns:1fr var(--panel-width); gap:12px; height:100vh; padding:12px; box-sizing:border-box; background:#f7f8fb; }
+#network { border:1px solid #e1e4ea; border-radius:8px; background:#fff; overflow:hidden; }
+#sidebar { background:#fff; border:1px solid #e1e4ea; border-radius:8px; padding:12px; box-sizing:border-box; overflow:auto; display:flex; flex-direction:column; }
+h2 { margin:0 0 8px 0; font-size:16px; }
+.controls { display:flex; gap:8px; margin-bottom:10px; }
+button { padding:6px 10px; border-radius:6px; border:1px solid #c7cbd6; background:#fff; cursor:pointer; }
+input[type="search"] { width:100%; padding:8px; border-radius:6px; border:1px solid #d0d4dc; margin-bottom:10px; box-sizing:border-box; }
+#info { font-size:13px; white-space:pre-wrap; color:#1f2937; }
+.legend { margin-top:12px; font-size:13px; color:#374151; }
+.legend-row { display:flex; gap:8px; align-items:center; margin:6px 0; flex-wrap:wrap; }
+.sw { width:18px; height:14px; border-radius:3px; border:1px solid #c0c4cc; }
+.meta { font-size:12px; color:#6b7280; margin-bottom:8px; }
+.line-name { font-weight:600; margin-right:6px; }
+.small { font-size:12px; color:#6b7280; }
+footer {font-size: 12px; color: gray; margin-top: auto; margin-bottom: 0; border-top: 1px solid #e1e4ea; padding-top: 6px;}
+
+/* Overlay for rotate prompt */
+#rotateOverlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(255,255,255,0.96);
+    z-index: 9999;
+    backdrop-filter: blur(4px);
+    font-family: Inter, system-ui, Segoe UI, Roboto, Arial;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+}
+#rotateOverlay img {
+    width: 80px;
+    opacity: 0.8;
+    animation: rotatePhone 2s infinite ease-in-out;
+    margin-bottom: 20px;
+}
+@keyframes rotatePhone {
+    0%,100% { transform: rotate(0deg); }
+    50% { transform: rotate(90deg); }
+}
+#rotateOverlay h1 {
+    font-size: 18px;
+    color: #111827;
+    margin-bottom: 6px;
+}
+#rotateOverlay p {
+    font-size: 14px;
+    color: #4b5563;
+}
