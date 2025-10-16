@@ -558,6 +558,11 @@ section#page_not_found {
         margin-left: 8px; /* Add space between the button and the text */
     }
 
+fieldset.trip_planner {
+margin-left: 10px;
+margin-right: 10px;
+}
+
     /* --- Input Fields and Labels --- */
     fieldset.trip_planner label.text {
         display: block;
