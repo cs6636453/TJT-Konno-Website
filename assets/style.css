@@ -642,6 +642,16 @@ main article div img{
     width: 300px;
 }
 
+main #wasabico div p, main #b41 div p,
+main #tjtbus div p, main #konno24 div p,
+main article div p{
+margin-left: 0;
+margin-right: 0;
+padding-left: 0;
+padding-right: 0;
+}
+
+
 .icon_header a img {
     width: 75px;
     height: 75px;
