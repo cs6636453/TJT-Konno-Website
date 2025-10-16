@@ -156,5 +156,14 @@
     <p class="disclaimer">Not an official Minecraft server. Not approved by or associated with Mojang or Microsoft corporation.</p><hr>
     <p>&copy 2025 Takarazaki Joint Transport Inc., Konno Pte., Ltd., All rights reserved.</p>
 </footer>
+<script>
+    const menuToggle = document.querySelector('.hamburger-menu');
+    const iconMenu = document.querySelector('.icon_menu');
+
+    menuToggle.addEventListener('click', function() {
+        menuToggle.classList.toggle('active');
+        iconMenu.classList.toggle('is-open');
+    });
+</script>
 </body>
 </html>
