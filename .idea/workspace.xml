@@ -5,22 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="68a8b792-d154-4722-a891-be6c00b754a0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/assets/images/eientei.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/flyingpancake.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/galaxy.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/goats.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/koen.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/maruyama.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/midori.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/otaki.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/promenade.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/qingque.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/rovs.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/scout.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/about_us/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/about_us/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/buses/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/buses/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kotoha_line/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/kotoha_line/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/index_handle.js" beforeDir="false" afterPath="$PROJECT_DIR$/api/index_handle.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -109,7 +97,7 @@
       <updated>1760516412669</updated>
       <workItem from="1760516414417" duration="31323000" />
       <workItem from="1760610630728" duration="7124000" />
-      <workItem from="1760620750263" duration="6114000" />
+      <workItem from="1760620750263" duration="8984000" />
     </task>
     <servers />
   </component>

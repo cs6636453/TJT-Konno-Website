@@ -27,7 +27,15 @@
         <a href="#">
             <img src="assets/favicon.png" alt="TJT">
             <h1>TJT Konno</h1>
+            <input type="checkbox" id="menu-toggle" style="display: none;">
+            <label for="menu-toggle" class="hamburger-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </label>
         </a>
+
+
     </section>
 
     <nav>
@@ -179,16 +187,18 @@
             <h1>Trip Planner</h1>
             <form id="trip_form" action="mytripquery/" method="GET">
                 <fieldset class="trip_planner">
-                    <legend>Navigate your route</legend>
-
-                    <input class="radio" type="radio" id="trip_all" name="criteria" value="fastest" checked>
-                    <label class="radio" for="trip_all">Fastest Route</label>
-
-                    <input class="radio" type="radio" id="trip_minsta" name="criteria" value="minsta">
-                    <label class="radio" for="trip_minsta">Minimum Stations</label>
-
-                    <input class="radio" type="radio" id="trip_mintrans" name="criteria" value="mintrans">
-                    <label class="radio" for="trip_mintrans">Minimum Transfers</label>
+                    <span class="radio-option">
+                        <input class="radio" type="radio" id="trip_all" name="criteria" value="fastest" checked>
+                        <label class="radio" for="trip_all">Fastest Route</label>
+                    </span>
+                    <span class="radio-option">
+                        <input class="radio" type="radio" id="trip_minsta" name="criteria" value="minsta">
+                        <label class="radio" for="trip_minsta">Minimum Stations</label>
+                    </span>
+                    <span class="radio-option">
+                        <input class="radio" type="radio" id="trip_mintrans" name="criteria" value="mintrans">
+                        <label class="radio" for="trip_mintrans">Minimum Transfers</label>
+                    </span>
                     <hr>
 
                     <label class="text" for="trip_origin">Origin:</label>
@@ -246,5 +256,15 @@
         <p class="disclaimer">Not an official Minecraft server. Not approved by or associated with Mojang or Microsoft corporation.</p><hr>
         <p>&copy 2025 Takarazaki Joint Transport Inc., Konno Pte., Ltd., All rights reserved.</p>
     </footer>
+
+    <script>
+        const menuToggle = document.querySelector('.hamburger-menu');
+        const iconMenu = document.querySelector('.icon_menu');
+
+        menuToggle.addEventListener('click', function() {
+            menuToggle.classList.toggle('active');
+            iconMenu.classList.toggle('is-open');
+        });
+    </script>
 </body>
 </html>

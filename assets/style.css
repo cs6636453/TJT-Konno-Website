@@ -125,18 +125,7 @@ footer p.disclaimer {
     color: lightgray;
 }
 
-main #service_status, main #trip_planner, main #wasabico,
-main #b41, main #tjtbus, main #konno24, main #iciwi,
-main #colorscheme, main article {
-    padding: 25px 50px;
-    background-color: white;
-    color: black;
-}
 
-main #wasabico div, main #b41 div, main #tjtbus div, main #konno24 div,
-main article div {
-    display: flex;
-}
 
 #iciwi p {
     color: gray;
@@ -150,6 +139,19 @@ main article div {
 
 #colorscheme ul {
     margin-left: 20px;
+}
+
+main #service_status, main #trip_planner, main #wasabico,
+main #b41, main #tjtbus, main #konno24, main #iciwi,
+main #colorscheme, main article {
+    padding: 25px 50px;
+    background-color: white;
+    color: black;
+}
+
+main #wasabico div, main #b41 div, main #tjtbus div, main #konno24 div,
+main article div {
+    display: flex;
 }
 
 main #wasabico div img, main #b41 div img,
@@ -407,5 +409,211 @@ section#page_not_found {
 }
 
 @media only screen and (max-width: 992px) {
+    section.server_ip {
+        display: none;
+    }
 
+    section.banner {
+        display: none;
+    }
+
+    section.banner-text p {
+        margin-left: 20px;
+        margin-right: 100px;
+    }
+
+    section.banner-text span {
+        margin-right: -25px;
+    }
+
+    /* This new rule prevents the page from scrolling when the menu is open */
+    body.noscroll {
+        overflow: hidden;
+    }
+
+    /* --- Hamburger Menu Button --- */
+    .hamburger-menu {
+        display: block;
+        background: none;
+        border: none;
+        cursor: pointer;
+        width: 30px;
+        height: 25px;
+        position: absolute;
+        right: 25px;
+        z-index: 1001;
+        padding: 0;
+    }
+
+    .hamburger-menu span {
+        display: block;
+        width: 100%;
+        height: 3px;
+        background-color: white;
+        margin-bottom: 5px;
+        position: relative;
+        transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+
+    .icon_menu a.active {
+        color: white;
+    }
+
+    /* --- Full Screen Menu (FIXED) --- */
+    .icon_menu {
+        margin-left: 0;
+        padding-left: 0;
+        padding-top: 50px;
+        position: fixed;
+        top: 0;
+        left: 0; /* CHANGED: Was right, now pinned to the left */
+        width: 100%;
+        height: 100%;
+        background-color: white;
+        z-index: 1000;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        opacity: 0;
+        visibility: hidden;
+
+        /* CHANGED: Using transform to hide the menu */
+        transform: translateX(100%);
+
+        /* UPDATED: Transitioning transform instead of right */
+        transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
+    }
+
+    .icon_menu a {
+        width: 100%;
+        padding: 15px 0;
+        text-align: center;
+        font-size: 22px;
+        font-weight: bold;
+        color: black;
+        box-sizing: border-box;
+    }
+
+    .icon_menu a.right {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    /* --- Functionality (FIXED) --- */
+    .icon_menu.is-open {
+        opacity: 1;
+        visibility: visible;
+
+        /* CHANGED: Using transform to show the menu */
+        transform: translateX(0);
+    }
+
+    /* --- Hamburger Animation --- */
+    .hamburger-menu.active span {
+        background-color: black;
+    }
+
+    .hamburger-menu.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .hamburger-menu.active span:nth-child(2) {
+        transform: scaleX(0);
+    }
+
+    .hamburger-menu.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -7px);
+    }
+
+    .status_container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* --- Trip Planner Section --- */
+    #trip_planner {
+        padding: 25px 20px;
+    }
+
+    fieldset.trip_planner {
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* --- Radio Buttons (CHANGED) --- */
+    .radio-option {
+        display: flex; /* Arrange button and label in a row */
+        align-items: center; /* Vertically align them */
+        margin-bottom: 10px; /* Space between each radio option line */
+    }
+
+    .radio-option .radio {
+        margin: 0; /* Remove default margins */
+    }
+
+    .radio-option label.radio {
+        margin-left: 8px; /* Add space between the button and the text */
+    }
+
+    /* --- Input Fields and Labels --- */
+    fieldset.trip_planner label.text {
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    fieldset.trip_planner .input-wrapper {
+        width: 100%;
+    }
+
+    fieldset.trip_planner input.text {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* --- Buttons (CHANGED) --- */
+    fieldset.trip_planner button.swap {
+        /* Kept square shape, removed border-radius */
+        padding: 7px 15px; /* Restored original padding */
+        align-self: center;
+        margin: 15px 0;
+        transform: rotate(90deg);
+    }
+
+    fieldset.trip_planner button.submit {
+        width: 100%;
+        padding: 12px;
+        font-size: 1.1em;
+        margin-top: 20px;
+    }
+
+    main #service_status, main #trip_planner, main #wasabico,
+    main #b41, main #tjtbus, main #konno24, main #iciwi,
+    main #colorscheme, main article {
+        justify-content: center;
+        text-align: center;
+        align-items: center;
+        align-content: center;
+    }
+
+    main #wasabico div p, main #b41 div p, main #tjtbus div p, main #konno24 div p,
+    main article div p {
+        text-align: left;
+    }
+
+    main #wasabico div, main #b41 div, main #tjtbus div, main #konno24 div,
+    main article div {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Add this line to center the image */
+    }
+
+    section#service_status section.status_box {
+        width: 100%; /* Make the box fill the full width */
+        margin-right: 0; /* Remove side margin */
+        margin-bottom: 20px; /* Add space between stacked boxes */
+        box-sizing: border-box;
+    }
 }

@@ -92,13 +92,23 @@ function setupAutocomplete(input, hiddenInput) {
         const list = document.createElement("div");
         list.classList.add("autocomplete-items");
         list.style.position = "absolute";
-        list.style.zIndex = 999;
+        list.style.zIndex = 1550;
         list.style.backgroundColor = "#fff";
         list.style.border = "1px solid #ccc";
         list.style.boxShadow = "0 2px 6px rgba(0,0,0,0.15)";
         list.style.maxHeight = "200px";
         list.style.overflowY = "auto";
-        list.style.width = 500 + "px"; // width same as input
+
+        // --- THIS IS THE EDITED LOGIC ---
+        // On mobile screens, match the input's width. On desktop, use a fixed width.
+        if (window.innerWidth <= 992) {
+            list.style.width = input.offsetWidth + "px";
+            list.style.boxSizing = "border-box"; // Ensure padding/border are included in the width
+        } else {
+            list.style.width = "500px";
+        }
+        // --- END OF EDIT ---
+
         wrapper.appendChild(list);
 
         suggestions.forEach(loc => {
