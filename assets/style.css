@@ -616,4 +616,8 @@ section#page_not_found {
         margin-bottom: 20px; /* Add space between stacked boxes */
         box-sizing: border-box;
     }
+
+    #colorscheme ul {
+        margin-left: 0;
+    }
 }
