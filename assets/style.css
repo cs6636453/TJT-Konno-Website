@@ -155,8 +155,8 @@ main article div {
 main #wasabico div img, main #b41 div img,
 main #tjtbus div img, main #konno24 div img,
 main article div img{
-    height: auto;
-    width: 30%;
+    height: 225px;
+    width: 400px;
 }
 
 main #wasabico div p, main #b41 div p, main #tjtbus div p, main #konno24 div p,
