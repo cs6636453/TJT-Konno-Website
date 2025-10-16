@@ -558,11 +558,18 @@ section#page_not_found {
         margin-left: 8px; /* Add space between the button and the text */
     }
 
-fieldset.trip_planner, #trip_planner form {
-margin-left: 0px;
-margin-right: 0px;
-padding-left: 0px;
-padding-right: 0px;
+#trip_planner form {
+margin-left: 0;
+margin-right: 0;
+padding-left: 0;
+padding-right: 0;
+}
+
+fieldset.trip_planner {
+margin-left: 5px;
+margin-right: 5px;
+padding-left: 0;
+padding-right: 0;
 }
 
     /* --- Input Fields and Labels --- */
