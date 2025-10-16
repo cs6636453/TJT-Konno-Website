@@ -232,6 +232,15 @@
                     let newCost = cost;
                     const stepBreakdown = [`From ${currentNode} to ${neighborKey} on line ${nextLine}`];
 
+                    // **FIX**: Determine the correct frequency for the current line
+                    let currentFreq;
+                    if (Array.isArray(connection.freq)) {
+                        const lineIndex = availableLines.indexOf(nextLine);
+                        currentFreq = (lineIndex !== -1) ? connection.freq[lineIndex] : connection.freq[0];
+                    } else {
+                        currentFreq = connection.freq;
+                    }
+
                     newCost += activeCosts.station;
                     stepBreakdown.push(`+${activeCosts.station} (station)`);
 
@@ -264,7 +273,8 @@
                         stepBreakdown.push(`+${activeCosts.bus} (bus route)`);
                     }
 
-                    if (connection.freq === 999) {
+                    // **FIX**: Use the determined `currentFreq` instead of `connection.freq`
+                    if (currentFreq === 999) {
                         if (isNextLineBus) {
                             newCost += activeCosts.manual_bus;
                             stepBreakdown.push(`+${activeCosts.manual_bus} (manual bus)`);
@@ -317,6 +327,16 @@
             const line = detailedPath[i].line;
             const connection = connectionsData[fromStation][toStation];
 
+            // **FIX**: Determine the correct frequency for the leg's line
+            let legFreq;
+            if (Array.isArray(connection.freq)) {
+                const availableLines = Array.isArray(connection.lines) ? connection.lines : [connection.lines];
+                const lineIndex = availableLines.indexOf(line);
+                legFreq = (lineIndex !== -1) ? connection.freq[lineIndex] : connection.freq[0];
+            } else {
+                legFreq = connection.freq;
+            }
+
             if (String(line) === "0") {
                 lastRealLine = null;
             }
@@ -327,11 +347,12 @@
                 transfers++;
             }
 
+            // **FIX**: Use the determined `legFreq` when creating the leg object
             legs.push({
                 from: fromStation,
                 to: toStation,
                 line: line,
-                freq: connection.freq,
+                freq: legFreq,
                 isThru: isThruService
             });
 
@@ -620,4 +641,3 @@
 </body>
 
 </html>
-
