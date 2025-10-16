@@ -641,4 +641,17 @@ main article div img{
     height: 168px;
     width: 300px;
 }
+
+.icon_header a img {
+    width: 75px;
+    height: 75px;
+    margin-left: 20px;
+}
+
+.icon_header a h1 {
+    margin-left: 20px;
+    text-decoration: none;
+    color: white;
+}
+
 }
