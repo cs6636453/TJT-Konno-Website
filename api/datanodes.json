@@ -122,18 +122,26 @@
   },
 
   "BPR": {
-    "BWD": { "lines": ["TK", "KK"], "flags": "", "freq": 999 },
-    "TWF": { "lines": ["TK", "KK"], "flags": "", "freq": 999 }
+    "BWD": { "lines": ["TK", "KK", "NE"], "flags": "", "freq": 999 },
+    "TWF": { "lines": ["TK", "KK"], "flags": "", "freq": 999 },
+    "TUT": { "lines": ["NE"], "flags": "", "freq": 999 },
+    "0043": { "lines": [1], "flags": "", "freq": 0 }
   },
 
   "BWD": {
-    "MFL": { "lines": ["TK", "KK"], "flags": "", "freq": 999 },
-    "BPR": { "lines": ["TK", "KK"], "flags": "", "freq": 999 }
+    "MFL": { "lines": ["TK", "KK", "NE"], "flags": "", "freq": 999 },
+    "BPR": { "lines": ["TK", "KK", "NE"], "flags": "", "freq": 999 }
   },
 
   "EPG": {
     "EMN": { "lines": ["EW"], "flags": "", "freq": 8 },
+    "TUT": { "lines": ["NE"], "flags": "", "freq": 999 },
     "0017": { "lines": [0], "flags": "", "freq": 0 }
+  },
+
+  "TUT": {
+    "EPG": { "lines": ["NE"], "flags": "", "freq": 999 },
+    "BPR": { "lines": ["NE"], "flags": "", "freq": 999 }
   },
 
   "MND": {
@@ -283,18 +291,23 @@
   "KPK": {
     "EGT": { "lines": ["CY"], "flags": "", "freq": 8 },
     "EPR": { "lines": ["CY"], "flags": "", "freq": 8 },
-    "KYB": { "lines": ["TK"], "flags": "", "freq": 999 },
-    "SNS": { "lines": ["TK"], "flags": "", "freq": 999 }
+    "KYB": { "lines": ["TK", "SC"], "flags": "", "freq": 999 },
+    "SNS": { "lines": ["TK", "SC"], "flags": "", "freq": 999 }
   },
 
   "SNS": {
-    "KPK": { "lines": ["TK"], "flags": "", "freq": 999 },
-    "MZN": { "lines": ["TK"], "flags": "", "freq": 999 }
+    "KPK": { "lines": ["TK", "SC"], "flags": "", "freq": 999 },
+    "MZN": { "lines": ["TK", "SC"], "flags": "", "freq": 999 }
   },
 
   "MZN": {
     "HKY": { "lines": ["TK"], "flags": "", "freq": 999 },
-    "SNS": { "lines": ["TK"], "flags": "", "freq": 999 }
+    "SNS": { "lines": ["TK", "SC"], "flags": "", "freq": 999 },
+    "TYO": { "lines": ["SC"], "flags": "", "freq": 999 }
+  },
+
+  "TYO": {
+    "MZN": { "lines": ["SC"], "flags": "", "freq": 999 }
   },
 
   "HKY": {
@@ -312,7 +325,8 @@
   "KSR": {
     "SDM": { "lines": ["QY"], "flags": "", "freq": 999 },
     "KCN": { "lines": [0], "flags": "", "freq": 0 },
-    "0024": { "lines": [0], "flags": "", "freq": 0 }
+    "0024": { "lines": [0], "flags": "", "freq": 0 },
+    "GOJ": { "lines": ["SC"], "flags": "", "freq": 999 }
   },
 
   "SDM": {
@@ -359,35 +373,42 @@
 
   "GOJ": {
     "ECL": { "lines": ["TK"], "flags": "", "freq": 999 },
-    "KYB": { "lines": ["TK"], "flags": "", "freq": 999 }
+    "KYB": { "lines": ["TK", "SC"], "flags": "", "freq": 999 },
+    "KSR": { "lines": ["SC"], "flags": "", "freq": 999 }
   },
 
   "KYB": {
-    "GOJ": { "lines": ["TK"], "flags": "", "freq": 999 },
-    "KPK": { "lines": ["TK"], "flags": "", "freq": 999 }
+    "GOJ": { "lines": ["TK", "SC"], "flags": "", "freq": 999 },
+    "KPK": { "lines": ["TK", "SC"], "flags": "", "freq": 999 }
   },
 
   "MFL": {
-    "BWD": { "lines": ["TK","KK"], "flags": "", "freq": 999 },
-    "KTH": { "lines": ["KK"], "flags": "", "freq": 999 },
+    "BWD": { "lines": ["TK","KK", "NE"], "flags": "", "freq": 999 },
+    "KTH": { "lines": ["KK", "NE"], "flags": "", "freq": 999 },
     "0033": { "lines": [1], "flags": "", "freq": 0 }
   },
 
   "KTH": {
-    "MFL": { "lines": ["KK"], "flags": "", "freq": 999 },
-    "MKW": { "lines": ["KK"], "flags": "", "freq": 999 }
+    "MFL": { "lines": ["KK", "NE"], "flags": "", "freq": 999 },
+    "MKW": { "lines": ["KK"], "flags": "", "freq": 999 },
+    "USG": { "lines": ["NE"], "flags": "", "freq": 999 }
+  },
+
+  "USG": {
+    "KTH": { "lines": ["NE"], "flags": "", "freq": 999 },
+    "0030": { "lines": [1], "flags": "", "freq": 0 }
   },
 
   "MKW": {
     "CTE": { "lines": ["KK"], "flags": "", "freq": 999 },
     "KTH": { "lines": ["KK"], "flags": "", "freq": 999 },
-    "0030": { "lines": [0], "flags": "", "freq": 0 }
+    "0030": { "lines": [1], "flags": "", "freq": 0 }
   },
 
   "CTE": {
     "MCS": { "lines": ["KK"], "flags": "", "freq": 999 },
     "MKW": { "lines": ["KK"], "flags": "", "freq": 999 },
-    "0011": { "lines": [0], "flags": "", "freq": 0 }
+    "0011": { "lines": [1], "flags": "", "freq": 0 }
   },
 
   "MCS": {
@@ -544,7 +565,8 @@
   },
 
   "0043": {
-    "EMN": { "lines": [1], "flags": "", "freq": 0 }
+    "EMN": { "lines": [1], "flags": "", "freq": 0 },
+    "TUT": { "lines": [1], "flags": "", "freq": 0 }
   },
 
   "0040": {
@@ -578,7 +600,6 @@
     "0004": { "lines": [1], "flags": "", "freq": 0 },
     "0003": { "lines": [1], "flags": "", "freq": 0 }
   },
-
   "0004": {
     "0017": { "lines": ["M7"], "flags": "", "freq": 8 },
     "0005": { "lines": [1], "flags": "", "freq": 0 }
@@ -602,7 +623,7 @@
   "0011": {
     "0044": { "lines": ["M7"], "flags": "", "freq": 8 },
     "0045": { "lines": ["M7"], "flags": "", "freq": 8 },
-    "CTE": { "lines": [0], "flags": "", "freq": 0 }
+    "CTE": { "lines": [1], "flags": "", "freq": 0 }
   },
 
   "0045": {
@@ -613,7 +634,8 @@
   "0030": {
     "0045": { "lines": ["M7"], "flags": "", "freq": 8 },
     "0018": { "lines": ["M7"], "flags": "", "freq": 8 },
-    "MKW": { "lines": [0], "flags": "", "freq": 0 }
+    "MKW": { "lines": [1], "flags": "", "freq": 0 },
+    "USG": { "lines": [1], "flags": "", "freq": 0 }
   },
 
   "0018": {

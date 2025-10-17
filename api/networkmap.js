@@ -27,6 +27,8 @@ window.addEventListener('load', checkOrientation);
         "QY":  { color: "#9c0c86", freq: 999, name: "Katsuragi-Leighstrand Shuttle" },
         "TK":  { color: "#915f13", freq: 999, name: "Tokaido Line" },
         "KK":  { color: "#23b9eb", freq: 999, name: "Kotoha Line" },
+        "NE":  { color: "#f542b0", freq: 999, name: "Northeast Mainline" },
+        "SC":  { color: "#a8a8a8", freq: 999, name: "Southcoast Mainline" },
         "M1":  { color: "#2373eb", freq: 8, name: "Mizuno BRT (M1)", isBus: true },
         "M6":  { color: "#2373eb", freq: 0, name: "Bus M6", isBus: true },
         "M7":  { color: "#2373eb", freq: 8, name: "Bus M7", isBus: true },

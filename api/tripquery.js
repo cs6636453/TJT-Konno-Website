@@ -182,7 +182,7 @@ function findBestPath(start, end, criteria) {
 
     const MAX_ITERATIONS = 30000;
     let iterations = 0;
-    const MAX_SOLUTIONS = 5;
+    const MAX_SOLUTIONS = 3; // Limit possible routes to 3
 
     while (pq.length > 0 && iterations < MAX_ITERATIONS) {
         iterations++;
@@ -193,17 +193,21 @@ function findBestPath(start, end, criteria) {
         if (currentNode === end) {
             solutions.push({ cost, path });
             solutions.sort((a, b) => a.cost - b.cost);
-            if (solutions.length > MAX_SOLUTIONS) {
-                solutions.pop();
+            if (solutions.length >= MAX_SOLUTIONS) {
+                solutions.splice(MAX_SOLUTIONS);
             }
-            continue;
+            if (solutions.length >= MAX_SOLUTIONS && cost > solutions.at(-1).cost) {
+                continue;
+            }
         }
 
         const visitedKey = `${currentNode}-${currentLine}`;
         if (visited.has(visitedKey) && visited.get(visitedKey) <= cost) {
             continue;
         }
-        visited.set(visitedKey, cost);
+        if (currentNode !== end) {
+            visited.set(visitedKey, cost);
+        }
 
         const neighbors = connectionsData[currentNode];
         if (!neighbors) continue;
@@ -268,8 +272,10 @@ function findBestPath(start, end, criteria) {
     }
 
     if (solutions.length > 0) {
-        console.log(`Found ${solutions.length} possible routes. Returning the best options.`);
-        return solutions.map(s => s.path);
+        solutions.sort((a, b) => a.cost - b.cost);
+        const finalSolutions = solutions.slice(0, MAX_SOLUTIONS);
+        console.log(`Found ${finalSolutions.length} possible routes. Returning the best options.`);
+        return finalSolutions.map(s => s.path);
     }
     return null;
 }
@@ -285,8 +291,9 @@ function calculatePathDetails(detailedPath) {
     let transfers = 0;
     const legs = [];
     let lastRealLine = null;
-    const linesUsed = new Set();
-    let walks = 0;
+    const allLinesUsed = new Set();
+    let walkSegments = 0;
+
     for (let i = 1; i < detailedPath.length; i++) {
         const fromStation = detailedPath[i - 1].station;
         const toStation = detailedPath[i].station;
@@ -295,9 +302,13 @@ function calculatePathDetails(detailedPath) {
         const connection = connectionsData[fromStation][toStation];
         const availableLines = Array.isArray(connection.lines) ? connection.lines.map(String) : [String(connection.lines)];
 
+        // Collect all available lines for the ride segment
         if (line !== "0" && line !== "1") {
-            linesUsed.add(line);
+            availableLines.forEach(l => {
+                if (l !== "0" && l !== "1") allLinesUsed.add(l);
+            });
         }
+
         let legFreq;
         if (Array.isArray(connection.freq)) {
             const lineIndex = availableLines.indexOf(line);
@@ -305,27 +316,33 @@ function calculatePathDetails(detailedPath) {
         } else {
             legFreq = connection.freq;
         }
+
         if (line === "0" || line === "1") {
             lastRealLine = null;
         }
+
         const isThruService = !!(connection.flags?.includes("thru") && lastRealLine && ((lastRealLine === 'CY' && line === 'TN') || (lastRealLine === 'TN' && line === 'CY')));
+
         if (lastRealLine && line !== lastRealLine && line !== "0" && line !== "1" && !isThruService) {
             transfers++;
         }
 
         if (line === "0" || line === "1") {
-            walks++;
+            walkSegments++;
         }
 
         legs.push({ from: fromStation, to: toStation, line: line, freq: legFreq, isThru: isThruService, availableLines: availableLines });
+
         if (line !== "0" && line !== "1") {
             lastRealLine = line;
         }
     }
-    walks += transfers;
-    return { rawPath: detailedPath, path, legs, transfers, stationCount: path.length, linesUsed: Array.from(linesUsed), walks };
-}
 
+    // Calculate total walks. Include 1 for final disembarkation/walk if there are any legs.
+    const totalWalks = walkSegments + transfers + (legs.length > 0 ? 1 : 0);
+
+    return { rawPath: detailedPath, path, legs, transfers, stationCount: path.length, linesUsed: Array.from(allLinesUsed), walks: totalWalks };
+}
 
 /**
  * Returns a human-readable string for a given service frequency code.
@@ -338,21 +355,28 @@ function getFrequencyText(freq) {
 
 /**
  * Gets the display name for a location key, with truncation for mobile.
+ * @param {string} key - The location key.
+ * @returns {string} The display name.
  */
 function getDisplayName(key) {
     let name = locationMap.get(key) || key;
-    if (name && name.includes('/')) {
-        name = name.split('/')[0].trim();
-    }
+    const isTerminus = name.includes('/');
+
     if (window.innerWidth <= 768 && typeof name === 'string') {
         name = name.replace(/\bStation\b/gi, 'Sta.');
         const MAX_LENGTH = 20;
+
+        if (isTerminus) {
+            return name;
+        }
+
         if (name.length > MAX_LENGTH) {
             let truncated = name.substring(0, MAX_LENGTH);
             let lastSpace = truncated.lastIndexOf(' ');
             name = (lastSpace > 0) ? truncated.substring(0, lastSpace).trim() : truncated.trim();
         }
     }
+
     return name;
 }
 
@@ -390,16 +414,48 @@ function renderMultipleResults(pathDetailsList) {
     let html = '<h2 class="text-xl font-bold mb-4 mt-4">Recommended Routes</h2>';
 
     pathDetailsList.forEach((details, index) => {
-        const linePills = details.linesUsed.map(lineKeyRaw => {
-            const lineKey = String(lineKeyRaw);
-            const lineInfo = lineMap.get(lineKey) || { name: lineKey, color: '#cbd5e0' };
-            const textColor = getContrastingTextColor(lineInfo.color);
-            const icon = isBusRoute.has(lineKey) ? 'directions_bus' : 'train';
-            return `<div class="route-badge-small" style="background-color: ${lineInfo.color}; color: ${textColor};">
-                        <span class="material-symbols-outlined text-sm">${icon}</span>
-                        <span>${lineInfo.name}</span>
+
+        let linePills;
+        let lineSequence = [];
+        let isWalkOnly = true;
+
+        // Process legs to build the sequential line display (A > B > C)
+        details.legs.forEach(leg => {
+            const line = String(leg.line);
+
+            if (line !== "0" && line !== "1") {
+                isWalkOnly = false;
+
+                // Use the single, actual line chosen (leg.line) for the summary sequence
+                const actualLine = String(leg.line);
+                const currentLineKey = actualLine;
+
+                if (lineSequence.length === 0 || lineSequence.at(-1) !== currentLineKey) {
+                    lineSequence.push(currentLineKey);
+                }
+            }
+        });
+
+        if (isWalkOnly) {
+            linePills = `<div class="route-badge-small" style="background-color: #f7fafc; color: #000000;">
+                        <span class="material-symbols-outlined text-sm">directions_walk</span>
+                        <span>Walking</span>
                     </div>`;
-        }).join('<span class="material-symbols-outlined text-gray-400">chevron_right</span>');
+        } else {
+            // Build the sequence display (Line A > Line B > ...)
+            linePills = lineSequence.map(lineKeyString => {
+                const primaryLineKey = lineKeyString; // Only one line key here
+                const lineInfo = lineMap.get(primaryLineKey) || { name: primaryLineKey, color: '#cbd5e0' };
+                const textColor = getContrastingTextColor(lineInfo.color);
+
+                const icon = isBusRoute.has(primaryLineKey) ? 'directions_bus' : 'train';
+
+                return `<div class="route-badge-small" style="background-color: ${lineInfo.color}; color: ${textColor};">
+                            <span class="material-symbols-outlined text-sm">${icon}</span>
+                            <span>${lineInfo.name}</span>
+                        </div>`;
+            }).join('<span class="material-symbols-outlined text-gray-400">chevron_right</span>');
+        }
 
         html += `
             <div class="summary-card" data-path-index="${index}">
@@ -449,32 +505,27 @@ function renderTrip(bestPathDetails, isSameStation = false, fromSummary = false)
         headerContainer.innerHTML = '';
     }
 
-    if (fromSummary) {
-        if (backButton) {
-            backButton.href = '#';
-            backButton.onclick = (e) => {
-                e.preventDefault();
-                renderMultipleResults(lastPathDetailsList);
-                backButton.onclick = null;
-                setInitialBackButtonHref();
-            };
+    // If coming from summary, force a hard refresh (reload current URL).
+    if (backButton) {
+        backButton.onclick = null; // Ensure the link works as a normal href
+        if (fromSummary) {
+            // Set the href to the current URL path + search params to force a full reload and re-render the summary
+            backButton.href = window.location.pathname + window.location.search;
+        } else {
+            // Default behavior for going back to the search root (if not from a summary)
+            setInitialBackButtonHref();
         }
-    } else if (backButton) {
-        backButton.onclick = null;
-        setInitialBackButtonHref();
     }
 
     if (isSameStation) {
         if (noResults) {
             noResults.textContent = "Origin and destination are the same.";
-            noResults.classList.remove('hidden');
         }
         return;
     }
     if (!bestPathDetails) {
         if (noResults) {
             noResults.textContent = `No path found from '${getQueryParams().origin}' to '${getQueryParams().dest}'.`;
-            noResults.classList.remove('hidden');
         }
         return;
     }
@@ -491,18 +542,39 @@ function renderTrip(bestPathDetails, isSameStation = false, fromSummary = false)
         </div>
     `;
 
-    const getLegDirection = (leg, lineKey) => {
-        const termini = lineTermini[lineKey];
-        if (!termini || termini[0] === termini[1]) return null;
-        if (pathExistsOnLine(leg.to, termini[0], lineKey, leg.from)) {
-            return termini[0];
-        }
-        return termini[1];
+    // Helper to compare two arrays of line keys (treating them as sets)
+    const compareLineArrays = (arr1, arr2) => {
+        if (arr1.length !== arr2.length) return false;
+        const set1 = new Set(arr1.map(String));
+        return arr2.every(line => set1.has(String(line)));
     };
+
+    /**
+     * Determines the terminus (destination) of a ride segment based on the line and direction.
+     * @param {string} lineKey - The line key (e.g., 'TK').
+     * @param {string} startNode - The starting station of the segment.
+     * @param {string} endNode - The ending station of the segment.
+     * @returns {string|null} The terminus key or null.
+     */
+    const getSegmentTerminus = (lineKey, startNode, endNode) => {
+        const termini = lineTermini[lineKey];
+        if (!termini || termini.length < 2 || termini[0] === termini[1]) return null;
+
+        // Check which terminus is reachable from the end of the segment on this specific line
+        // Using the start node as prevNode for pathExistsOnLine is critical for direction
+        if (pathExistsOnLine(endNode, termini[0], lineKey, startNode)) {
+            return termini[0];
+        } else if (pathExistsOnLine(endNode, termini[1], lineKey, startNode)) {
+            return termini[1];
+        }
+        return null;
+    };
+
 
     const processedSegments = [];
     if (bestPathDetails.legs.length > 0) {
         let currentRide = null;
+        let currentRideTerminus = null; // FIXED: Initialization here
 
         const getBestLine = (lines) => {
             const stringLines = lines.map(String);
@@ -513,97 +585,174 @@ function renderTrip(bestPathDetails, isSameStation = false, fromSummary = false)
         };
 
         for (const leg of bestPathDetails.legs) {
-            if (String(leg.line) === "0" || String(leg.line) === "1") {
+            const nextLine = String(leg.line);
+
+            if (nextLine === "0" || nextLine === "1") {
                 if (currentRide) processedSegments.push(currentRide);
                 currentRide = null;
+                currentRideTerminus = null;
                 processedSegments.push({ type: 'osi', from: leg.from, to: leg.to });
                 continue;
             }
 
-            const legDirection = getLegDirection(leg, leg.line);
+            // Calculate the terminus for the *next* leg if we were to start a new ride
+            const nextTerminus = getSegmentTerminus(nextLine, leg.from, leg.to);
 
             if (currentRide) {
-                const commonLines = currentRide.commonLines.filter(line => leg.availableLines.map(String).includes(String(line)));
-                const directionChanges = currentRide.direction !== null && legDirection !== currentRide.direction;
 
-                if (commonLines.length === 0 || directionChanges) {
-                    processedSegments.push(currentRide);
-                    if (processedSegments.at(-1)?.type !== 'osi') {
-                        processedSegments.push({ type: 'transfer', at: currentRide.stops.at(-1) });
-                    }
-                    currentRide = null;
-                } else {
+                // FIX: Ride continues only if the line and terminus are IDENTICAL.
+                if (currentRide.line === nextLine && currentRideTerminus === nextTerminus) {
                     currentRide.stops.push(leg.to);
-                    currentRide.commonLines = commonLines;
-                    currentRide.line = getBestLine(commonLines);
                     continue;
+                } else {
+                    // Line changed OR direction/terminus changed (required for Minagi/Sorawo). Force a break and transfer.
+                    processedSegments.push(currentRide);
+
+                    // Always insert a transfer segment when the ride breaks.
+                    processedSegments.push({ type: 'transfer', at: currentRide.stops.at(-1) });
+                    currentRide = null;
+                    currentRideTerminus = null;
                 }
             }
 
             if (!currentRide) {
                 currentRide = {
                     type: 'ride',
-                    line: getBestLine(leg.availableLines),
+                    line: nextLine, // The actual line chosen by the pathfinder
                     stops: [leg.from, leg.to],
                     freq: leg.freq,
-                    direction: legDirection,
-                    commonLines: leg.availableLines
+                    availableLines: leg.availableLines // All parallel lines available
                 };
+                currentRideTerminus = nextTerminus; // Set the terminus for the new segment
             }
         }
         if (currentRide) processedSegments.push(currentRide);
     }
 
-    let html = '';
-    processedSegments.forEach((segment, index) => {
-        if (segment.type === 'ride') {
-            const lineKey = String(segment.line);
-            const lineInfo = lineMap.get(lineKey) || { name: lineKey, color: '#cbd5e0' };
-            const textColor = getContrastingTextColor(lineInfo.color);
-            const startStation = getDisplayName(segment.stops[0]);
-            const endStationKey = segment.stops.at(-1);
-            let displayDestinationName;
+    // **Final Processing Pass to Insert Transfer Walk Segments**
+    const finalSegments = [];
+    for (let i = 0; i < processedSegments.length; i++) {
+        const segment = processedSegments[i];
 
-            if (segment.direction) {
-                displayDestinationName = getDisplayName(segment.direction);
-            } else {
-                displayDestinationName = getDisplayName(endStationKey);
+        // If the current segment is a Transfer/Walk/OSI...
+        if (segment.type === 'transfer') {
+            const prev = finalSegments.at(-1);
+            const next = processedSegments[i + 1];
+
+            // If the transfer is between two rides at the same station (prev.stops.at(-1) === next.stops[0]),
+            // we keep the transfer box.
+            if (prev && prev.type === 'ride' && next && next.type === 'ride' && prev.stops.at(-1) === next.stops[0]) {
+                finalSegments.push({ type: 'walk', at: segment.at }); // INSERT THE WALK VISUAL SEGMENT
+                continue;
             }
+        }
 
+        finalSegments.push(segment);
+    }
+    // End Final Processing Pass
+
+    let html = '';
+    finalSegments.forEach((segment, index) => {
+
+        let primaryColor = '#cbd5e0';
+
+        if (segment.type === 'ride') {
+            // Get color based on the actual line used (segment.line) for the entire segment's timeline
+            const actualLineInfo = lineMap.get(segment.line) || { color: '#cbd5e0' };
+            primaryColor = actualLineInfo.color;
+        }
+
+
+        if (segment.type === 'ride') {
+            const startStation = getDisplayName(segment.stops[0]);
+            const rideStartStation = segment.stops[0];
+            const rideEndStation = segment.stops.at(-1); // The destination of the ride segment
             const intermediateStops = segment.stops.slice(1, -1);
-            const icon = isBusRoute.has(lineKey) ? 'directions_bus' : 'train';
             const freqText = getFrequencyText(segment.freq);
             let freqIcon;
             if (segment.freq === 999) freqIcon = 'support_agent';
             else if (segment.freq === 0) freqIcon = 'touch_app';
             else freqIcon = 'schedule';
 
-            html += `<div class="timeline-item"><div class="timeline-connector"><div class="timeline-line" style="background-color: ${lineInfo.color}; top: 50%; bottom: 0;"></div><div class="timeline-dot" style="border-color: ${lineInfo.color};"></div></div><div class="timeline-content station-content"><div class="font-bold text-xl station-name">${startStation}</div></div></div>`;
+            // Use primaryColor for line above station, dot border, and line through ride
+            html += `<div class="timeline-item"><div class="timeline-connector"><div class="timeline-line" style="background-color: ${primaryColor}; top: 50%; bottom: 0;"></div><div class="timeline-dot" style="border-color: ${primaryColor};"></div></div><div class="timeline-content station-content"><div class="font-bold text-xl station-name">${startStation}</div></div></div>`;
 
-            html += `<div class="timeline-item"><div class="timeline-connector"><div class="timeline-line" style="background-color: ${lineInfo.color}; top: 0; bottom: 0;"></div></div><div class="timeline-content"><div class="mb-2"><div class="route-badge" style="background-color: ${lineInfo.color}; color: ${textColor};"><span class="material-symbols-outlined text-sm">${icon}</span><span>${lineInfo.name}</span></div><span class="block md:inline md:ml-2 text-gray-600 mt-1 md:mt-0">to <span class="station-name">${displayDestinationName}</span></span><div class="text-sm text-gray-500 mt-1 flex items-center gap-1"><span class="material-symbols-outlined text-base">${freqIcon}</span><span>${freqText}</span></div></div>${intermediateStops.length > 0 ? `<div class="relative"><button class="toggle-stops text-sm text-blue-600 hover:underline my-2" data-target="stops-${index}">Show ${intermediateStops.length} intermediate stop(s) <span class="arrow font-sans">&#9662;</span></button><div id="stops-${index}" class="hidden my-2 -ml-10">${intermediateStops.map(stop => `<div class="timeline-item"><div class="timeline-connector"><div class="timeline-line" style="background-color: ${lineInfo.color}; top: 0; bottom: 0;"></div><div class="intermediate-dot" style="border-color: ${lineInfo.color};"></div></div><div class="timeline-content"><div class="text-gray-700 text-sm station-name">${getDisplayName(stop)}</div></div></div>`).join('')}</div></div>` : ''}</div></div>`;
+            // **Generate breakdown: Filter to show ONLY the line chosen by the pathfinder (segment.line)**
+            const linesToDisplay = segment.availableLines.filter(lineKey => String(lineKey) === segment.line);
 
-        } else if (segment.type === 'osi' || segment.type === 'transfer') {
+            const individualLineHtml = linesToDisplay.map(lineKeyRaw => {
+                const lineKey = String(lineKeyRaw);
+                const lineInfo = lineMap.get(lineKey) || { name: lineKey, color: '#cbd5e0' };
+                const textColor = getContrastingTextColor(lineInfo.color);
+                const icon = isBusRoute.has(lineKey) ? 'directions_bus' : 'train';
+
+                let displayDestinationName = getDisplayName(rideEndStation); // Default to the ride segment's end station
+                let calculatedTerminus = null;
+
+                // Logic to find the terminus that is *further* from the start station in the direction of travel
+                const termini = lineTermini[lineKey];
+                if (termini && termini.length === 2 && termini[0] !== termini[1]) {
+                    // Check which terminus is reachable from the end of the segment on this specific line
+                    if (pathExistsOnLine(rideEndStation, termini[0], lineKey, rideStartStation)) {
+                        calculatedTerminus = termini[0];
+                    } else if (pathExistsOnLine(rideEndStation, termini[1], lineKey, rideStartStation)) {
+                        calculatedTerminus = termini[1];
+                    }
+                } else if (termini && termini.length === 1) {
+                    calculatedTerminus = termini[0];
+                }
+
+                if (calculatedTerminus) {
+                    displayDestinationName = getDisplayName(calculatedTerminus);
+                }
+
+                return `
+                    <div class="flex items-center mb-1">
+                        <div class="route-badge-small mr-2" style="background-color: ${lineInfo.color}; color: ${textColor};">
+                            <span class="material-symbols-outlined text-sm">${icon}</span>
+                            <span>${lineInfo.name}</span>
+                        </div>
+                        <span class="text-gray-700 font-semibold">to <span class="station-name">${displayDestinationName}</span></span>
+                    </div>
+                `;
+            }).join('');
+
+            // Use primaryColor for the line through the ride
+            html += `<div class="timeline-item"><div class="timeline-connector"><div class="timeline-line" style="background-color: ${primaryColor}; top: 0; bottom: 0;"></div></div><div class="timeline-content"><div class="mb-2">${individualLineHtml}</div><div class="text-sm text-gray-500 mt-1 flex items-center gap-1"><span class="material-symbols-outlined text-base">${freqIcon}</span><span>${freqText}</span></div>${intermediateStops.length > 0 ? `<div class="relative"><button class="toggle-stops text-sm text-blue-600 hover:underline my-2" data-target="stops-${index}">Show ${intermediateStops.length} intermediate stop(s) <span class="arrow font-sans">&#9662;</span></button><div id="stops-${index}" class="hidden my-2 -ml-10">${intermediateStops.map(stop => `<div class="timeline-item"><div class="timeline-connector"><div class="timeline-line" style="background-color: ${primaryColor}; top: 0; bottom: 0;"></div><div class="intermediate-dot" style="border-color: ${primaryColor};"></div></div><div class="timeline-content"><div class="text-gray-700 text-sm station-name">${getDisplayName(stop)}</div></div></div>`).join('')}</div></div>` : ''}</div></div>`;
+
+
+        } else if (segment.type === 'osi' || segment.type === 'transfer' || segment.type === 'walk') {
+            // Simplify the display name to just "Walk"
             const text = 'Walk';
             const icon = 'directions_walk';
             const stationName = getDisplayName(segment.at || segment.from);
-            const prevRide = processedSegments[index - 1];
-            const prevLineInfo = prevRide ? (lineMap.get(String(prevRide.line)) || { name: prevRide.line, color: '#cbd5e0' }) : { color: '#cbd5e0', name: '' };
+            const prevRide = finalSegments[index - 1];
+
+            // Get the color of the previous ride segment for the top of the timeline line
+            let prevLineColor = '#cbd5e0';
+            if (prevRide && prevRide.type === 'ride') {
+                const actualLineInfo = lineMap.get(prevRide.line) || { color: '#cbd5e0' };
+                prevLineColor = actualLineInfo.color;
+            }
 
             let lineTop = (index === 0 && segment.type === 'osi') ? '50%' : '0';
-            html += `<div class="timeline-item"><div class="timeline-connector"><div class="timeline-line" style="background-color: ${prevLineInfo.color}; top: ${lineTop}; bottom: 50%;"></div><div class="timeline-dot" style="border-color: ${prevLineInfo.color};"></div></div><div class="timeline-content station-content"><div class="font-bold text-xl station-name">${stationName}</div></div></div>`;
+            html += `<div class="timeline-item"><div class="timeline-connector"><div class="timeline-line" style="background-color: ${prevLineColor}; top: ${lineTop}; bottom: 50%;"></div><div class="timeline-dot" style="border-color: ${prevLineColor};"></div></div><div class="timeline-content station-content"><div class="font-bold text-xl station-name">${stationName}</div></div></div>`;
 
             const connectorStyle = 'border-left: 4px dashed #cbd5e0; top: -1.5rem; bottom: -1.5rem;';
             html += `<div class="timeline-item" style="min-height: 4rem;"><div class="timeline-connector"><div class="timeline-line" style="${connectorStyle}"></div></div><div class="timeline-content"><div class="flex items-center gap-2 h-full"><span class="material-symbols-outlined text-gray-600">${icon}</span><span class="font-semibold text-gray-700">${text}</span></div></div></div>`;
         }
     });
 
-    const lastLeg = processedSegments.at(-1);
+    const lastLeg = finalSegments.at(-1);
     if (lastLeg) {
         const finalStation = getDisplayName(lastLeg.stops ? lastLeg.stops.at(-1) : lastLeg.to);
-        let finalLineInfo;
-        if (lastLeg.type === 'ride') finalLineInfo = lineMap.get(String(lastLeg.line)) || { color: '#cbd5e0' };
-        else finalLineInfo = { color: '#cbd5e0' };
-        html += `<div class="timeline-item"><div class="timeline-connector"><div class="timeline-line" style="background-color: ${finalLineInfo.color}; top: 0; bottom: 50%;"></div><div class="timeline-dot" style="border-color: ${finalLineInfo.color};"></div></div><div class="timeline-content station-content"><div class="font-bold text-xl station-name">${finalStation}</div></div></div>`;
+        let finalLineColor = '#cbd5e0';
+        if (lastLeg.type === 'ride') {
+            // Get color based on the actual line used (segment.line) of the last ride
+            const actualLineInfo = lineMap.get(lastLeg.line) || { color: '#cbd5e0' };
+            finalLineColor = actualLineInfo.color;
+        }
+        html += `<div class="timeline-item"><div class="timeline-connector"><div class="timeline-line" style="background-color: ${finalLineColor}; top: 0; bottom: 50%;"></div><div class="timeline-dot" style="border-color: ${finalLineColor};"></div></div><div class="timeline-content station-content"><div class="font-bold text-xl station-name">${finalStation}</div></div></div>`;
     }
 
     if (resultsContainer) resultsContainer.innerHTML = html;
@@ -637,12 +786,15 @@ function setInitialBackButtonHref() {
     const source = urlParams.get('source');
     const queryString = `criteria=${criteria || ''}&origin=${origin || ''}&dest=${dest || ''}`;
     if (!backButton) return;
+
+    // Set the base URL for the 'back' action, ensuring it includes the path back to the parent directory or domain root.
     if (source && source.includes('limaru')) {
         backButton.href = `https://www.limaru.net/transportation?${queryString}`;
     } else if (source) {
         const separator = source.includes('?') ? '&' : '?';
         backButton.href = `${source}${separator}${queryString}`;
     } else {
+        // This is the default case for reloading the search on the main index page
         backButton.href = `../?${queryString}`;
     }
 }
@@ -728,8 +880,7 @@ async function planTrip() {
 
         let pathDetailsList = bestPaths.map(path => calculatePathDetails(path));
 
-        // The following filters are commented out as per the request to handle all cases "as normal".
-        // This ensures that all paths found by the algorithm are considered.
+        // The following filters are commented out as per the original snippet and will remain so.
         // pathDetailsList = filterUnnecessaryWalks(pathDetailsList);
         // pathDetailsList = filterInefficientDetours(pathDetailsList, connectionsData);
 
@@ -750,12 +901,43 @@ async function planTrip() {
             pathDetailsList = filteredList;
         }
 
-        lastPathDetailsList = pathDetailsList;
+        lastPathDetailsList = pathDetailsList.slice(0, 3);
 
-        if (pathDetailsList.length > 1) {
-            renderMultipleResults(pathDetailsList);
-        } else if (pathDetailsList.length === 1) {
-            renderTrip(pathDetailsList[0]);
+        // **Filter identical paths for summary view**
+        if (lastPathDetailsList.length > 1) {
+            const firstPath = lastPathDetailsList[0];
+
+            // Create a simplified "signature" for comparison
+            // Signature uses the single actual line (leg.line) for redundancy check
+            const getPathSignature = (details) => {
+                const lineSequence = [];
+                details.legs.forEach(leg => {
+                    const line = String(leg.line);
+                    if (line !== "0" && line !== "1" && lineSequence.at(-1) !== line) {
+                        lineSequence.push(line);
+                    } else if (line === "0" || line === "1") {
+                        // Use a placeholder for walk/osi segments to ensure sequence matches
+                        if (lineSequence.at(-1) !== 'WALK') {
+                            lineSequence.push('WALK');
+                        }
+                    }
+                });
+                return `${details.stationCount}:${details.walks}:${lineSequence.join('>')}`;
+            };
+
+            const firstSignature = getPathSignature(firstPath);
+            const allIdentical = lastPathDetailsList.every(path => getPathSignature(path) === firstSignature);
+
+            if (allIdentical) {
+                lastPathDetailsList = [firstPath]; // Filter down to one
+                console.log("All remaining routes are identical in summary metrics. Displaying only one route.");
+            }
+        }
+
+        if (lastPathDetailsList.length > 1) {
+            renderMultipleResults(lastPathDetailsList);
+        } else if (lastPathDetailsList.length === 1) {
+            renderTrip(lastPathDetailsList[0]);
         } else {
             renderTrip(null);
         }
