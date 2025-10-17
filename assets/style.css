@@ -127,11 +127,11 @@ footer p.disclaimer {
 
 
 
-#iciwi p {
+#iciwi p, #trip_planner p {
     color: gray;
 }
 
-#iciwi p a {
+#iciwi p a, #trip_planner p a {
     text-decoration: none;
     color: darkcyan;
     text-underline: darkcyan;
