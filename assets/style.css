@@ -563,6 +563,7 @@ margin-left: 0;
 margin-right: 0;
 padding-left: 0;
 padding-right: 0;
+text-align: center;
 }
 
 fieldset.trip_planner {
@@ -570,7 +571,6 @@ margin-left: 0;
 margin-right: 0;
 padding-left: 0;
 padding-right: 0;
-text-align: center;
 }
 
 fieldset.trip_planner input,
