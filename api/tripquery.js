@@ -8,15 +8,8 @@ let connectionsData = {};
 let linePriority = [];
 const destinationCache = new Map();
 
-// --- Hardcoded Line Termini ---
-const lineTermini = {
-    'ILL': ['POH', 'YJJ'], 'EW': ['YJJ', 'TWF'], 'KM': ['RSN', 'PPL'],
-    'LP': ['KSC', 'MSV'], 'LPB': ['LJN', 'LCT'], 'NK': ['TWE', 'KCN'],
-    'TN': ['PLJ', 'PPL'], 'TNE': ['KMT', 'PPL'], 'CY': ['PPL', 'EPR'],
-    'QY': ['KSR', 'LGH'], 'TK': ['FHL', 'MFL'], 'KK': ['STN', 'SMY'],
-    'M1': ['0033', '0021'], 'M6': ['0033', '0043'], 'M7': ['0038', '0043'],
-    'M9': ['0020', '0026'], 'L41': ['0023', '0010'], 'E17': ['0029', '0014']
-};
+// --- Line Termini will be loaded from JSON ---
+let lineTermini = {};
 
 function getContrastingTextColor(hexcolor) {
     if (!hexcolor) return '#000000';
@@ -38,8 +31,11 @@ async function setupData() {
         const dataset = await datasetRes.json();
         connectionsData = await connectionsRes.json();
 
+        // Load line termini from the fetched dataset
+        lineTermini = dataset.terminus || {};
+
         [...dataset.stations, ...dataset.bus_stops].forEach(s => locationMap.set(s.key, s.name));
-        
+
         const allRoutes = [...dataset.routes, ...dataset.bus_routes];
 
         allRoutes.forEach(route => {
@@ -48,7 +44,7 @@ async function setupData() {
                 isBusRoute.add(route.key);
             }
         });
-        
+
         linePriority = [...dataset.routes.map(r => r.key), ...dataset.bus_routes.map(r => r.key)];
 
     } catch (error) {

@@ -147,5 +147,25 @@
     { "key": "M9", "name": "Songtaew M9", "color": "#db250d" },
     { "key": "L41", "name": "Namboku - Lipan Bus", "color": "#3b3b3b" },
     { "key": "E17", "name": "Bus E17", "color": "#3b3b3b" }
-  ]
+  ],
+  "terminus": {
+    "ILL": ["POH", "YJJ"],
+    "EW": ["YJJ", "TWF"],
+    "KM": ["RSN", "PPL"],
+    "LP": ["KSC", "MSV"],
+    "LPB": ["LJN", "LCT"],
+    "NK": ["TWE", "KCN"],
+    "TN": ["PLJ", "PPL"],
+    "TNE": ["KMT", "PPL"],
+    "CY": ["PPL", "EPR"],
+    "QY": ["KSR", "LGH"],
+    "TK": ["FHL", "MFL"],
+    "KK": ["STN", "SMY"],
+    "M1": ["0033", "0021"],
+    "M6": ["0033", "0043"],
+    "M7": ["0038", "0043"],
+    "M9": ["0020", "0026"],
+    "L41": ["0023", "0010"],
+    "E17": ["0029", "0014"]
+  }
 }
