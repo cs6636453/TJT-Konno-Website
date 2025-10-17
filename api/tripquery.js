@@ -64,7 +64,6 @@ function getQueryParams() {
     };
 }
 
-// **MODIFIED** - Added caching for performance
 function pathExistsOnLine(startNode, endNode, line, prevNode) {
     const cacheKey = `${startNode}-${endNode}-${line}`;
     if (pathExistsCache.has(cacheKey)) {
@@ -302,9 +301,14 @@ function getFrequencyText(freq) {
     return `Every ${freq} mins`;
 }
 
+// **MODIFIED** - Abbreviates 'Station' only on mobile
 function getDisplayName(key) {
     let name = locationMap.get(key) || key;
-    name = name.replace(/\bStation\b/gi, 'Sta.');
+
+    // Abbreviate "Station" to "Sta." only on smaller screens (mobile devices)
+    if (window.innerWidth <= 768) {
+        name = name.replace(/\bStation\b/gi, 'Sta.');
+    }
 
     if (name.includes('/')) {
         name = name.split('/')[0].trim();
@@ -325,7 +329,6 @@ function getDisplayName(key) {
     return name;
 }
 
-// **MODIFIED** - Complete replacement of this function
 function renderTrip(bestPathDetails, isSameStation = false) {
     const resultsContainer = document.getElementById('results-container');
     const noResults = document.getElementById('no-results');
@@ -418,10 +421,8 @@ function renderTrip(bestPathDetails, isSameStation = false) {
             if (nextSegment && nextSegment.type === 'thru' && segment.line === nextSegment.fromLine) {
                 displayDestinationName = getDisplayName(nextSegment.at);
             } else if (segment.direction) {
-                // **CHANGE**: Use the pre-calculated direction stored on the segment
                 displayDestinationName = getDisplayName(segment.direction);
             } else {
-                // Fallback to the last station of this segment if direction is unknown
                 displayDestinationName = getDisplayName(endStationKey);
             }
 
