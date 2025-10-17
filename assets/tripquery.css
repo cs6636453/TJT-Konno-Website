@@ -32,6 +32,54 @@ body {
     border-style: solid; border-width: 3px; z-index: 10;
 }
 
+.summary-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.summary-card:hover {
+    background-color: #f8fafc;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.line-pill-sequence {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.route-badge-small {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.125rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.summary-stats {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: #4b5563;
+    font-size: 0.875rem;
+    margin-top: 0.75rem;
+}
+.summary-stats span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
 @media (max-width: 640px) {
     .station-name {
         max-width: 250px;
