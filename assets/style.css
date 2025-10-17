@@ -568,8 +568,14 @@ padding-right: 0;
 fieldset.trip_planner {
 margin-left: 0;
 margin-right: 0;
-padding-left: 10px;
-padding-right: 10px;
+padding-left: 0;
+padding-right: 0;
+}
+
+fieldset.trip_planner input,
+fieldset.trip_planner label {
+  margin: 5px;
+  padding: 0;
 }
 
     /* --- Input Fields and Labels --- */
