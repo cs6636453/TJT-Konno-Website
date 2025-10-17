@@ -458,7 +458,7 @@ function renderTrip(bestPathDetails, isSameStation = false) {
                                         <div class="timeline-item">
                                             <div class="timeline-connector">
                                                 <div class="timeline-line" style="background-color: ${lineInfo.color}; top: 0; bottom: 0;"></div>
-                                                <div class="intermediate-dot" style="border-color: ${lineInfo.color};"></div>
+                                                <div class="intermediate-dot" style="border-color: #cbd5e0;"></div>
                                             </div>
                                             <div class="timeline-content"><div class="text-gray-700 text-sm station-name">${getDisplayName(stop)}</div></div>
                                         </div>
