@@ -152,12 +152,27 @@ function pre_filled() {
     const originName = urlParams.get("origin");
     const destName = urlParams.get("dest");
 
+    const type = urlParams.get("criteria");
+
     if (!allLocations.length) return;
 
     const originInput = document.getElementById("trip_origin");
     const destInput = document.getElementById("trip_dest");
     const originKey = document.getElementById("trip_origin_key");
     const destKey = document.getElementById("trip_dest_key");
+
+    // This is your existing code
+
+    // Add this part to apply the 'type'
+    if (type) {
+        // Find the radio button whose 'value' attribute matches the 'type' from the URL
+        const selectedRadioButton = document.querySelector(`input[name="criteria"][value="${type}"]`);
+
+        // If a matching radio button is found, check it
+        if (selectedRadioButton) {
+            selectedRadioButton.checked = true;
+        }
+    }
 
     if (originName) {
         const originObj = allLocations.find(loc => loc.key === originName || loc.name === originName);
