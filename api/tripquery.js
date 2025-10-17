@@ -43,7 +43,7 @@ async function setupData() {
         const allRoutes = [...dataset.routes, ...dataset.bus_routes];
 
         allRoutes.forEach(route => {
-            lineMap.set(route.key, { name: route.name, color: route.color || '#cccccc' });
+            lineMap.set(route.key, { name: route.name, color: route.color || '#cbd5e0' });
             if (/\d/.test(route.key)) {
                 isBusRoute.add(route.key);
             }
@@ -308,9 +308,9 @@ function getDisplayName(key) {
         let lastSpace = truncated.lastIndexOf(' ');
 
         if (lastSpace > 0) {
-            name = truncated.substring(0, lastSpace).trim() + '...';
+            name = truncated.substring(0, lastSpace).trim() + '';
         } else {
-            name = truncated.trim() + '...';
+            name = truncated.trim() + '';
         }
     }
 
@@ -383,7 +383,7 @@ function renderTrip(bestPathDetails, isSameStation = false) {
 
     processedSegments.forEach((segment, index) => {
         if (segment.type === 'ride') {
-            const lineInfo = lineMap.get(segment.line) || { name: segment.line, color: '#cccccc' };
+            const lineInfo = lineMap.get(segment.line) || { name: segment.line, color: '#cbd5e0' };
             const textColor = getContrastingTextColor(lineInfo.color);
             const startStation = getDisplayName(segment.stops[0]);
             const endStationKey = segment.stops.at(-1);
@@ -476,7 +476,7 @@ function renderTrip(bestPathDetails, isSameStation = false) {
             const stationName = getDisplayName(segment.at || segment.from);
 
             const prevRide = processedSegments[index - 1];
-            const prevLineInfo = prevRide ? (lineMap.get(prevRide.line) || { name: prevRide.line, color: '#cccccc' }) : { color: '#cbd5e0', name: '' };
+            const prevLineInfo = prevRide ? (lineMap.get(prevRide.line) || { name: prevRide.line, color: '#cbd5e0' }) : { color: '#cbd5e0', name: '' };
             const nextLineInfo = isThru ? (lineMap.get(segment.toLine) || { color: '#cbd5e0', name: '' }) : { color: '#cbd5e0', name: '' };
 
             if (!isThru) {
@@ -514,9 +514,9 @@ function renderTrip(bestPathDetails, isSameStation = false) {
         let finalLineInfo;
 
         if (lastLeg.type === 'ride') {
-            finalLineInfo = lineMap.get(lastLeg.line) || { name: lastLeg.line, color: '#cccccc' };
+            finalLineInfo = lineMap.get(lastLeg.line) || { name: lastLeg.line, color: '#cbd5e0' };
         } else if (lastLeg.type === 'thru') {
-            finalLineInfo = lineMap.get(lastLeg.toLine) || { name: lastLeg.toLine, color: '#cccccc' };
+            finalLineInfo = lineMap.get(lastLeg.toLine) || { name: lastLeg.toLine, color: '#cbd5e0' };
         } else {
             finalLineInfo = { color: '#cbd5e0' };
         }
