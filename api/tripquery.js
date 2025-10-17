@@ -578,20 +578,25 @@ async function planTrip() {
         const backButton = document.getElementById('back-button');
         const urlParams = new URLSearchParams(window.location.search);
         const source = urlParams.get('source');
+// Assumes 'criteria', 'origin', and 'dest' variables are already defined
 
-// 1. Build a NEW query string that ONLY includes the parameters you want to pass back.
-//    Notice 'source' is not included here.
+// 1. Build the query string with all parameters to pass back
         const queryString = `criteria=${criteria || ''}&origin=${origin || ''}&dest=${dest || ''}`;
 
-// 2. Determine the base URL
-        let baseUrl = '../'; // Default base URL
-        if (source) {
-            baseUrl = source; // If a source exists, use it as the base URL instead
-        }
+// 2. NEW: Check for the special 'limaru' case first
+        if (source && source.includes('limaru')) {
+            // If 'source' exists AND contains 'limaru', force the URL to the main transportation page
+            backButton.href = `https://www.limaru.net/transportation?${queryString}`;
 
-// 3. Combine the base URL and the new query string
-        const separator = baseUrl.includes('?') ? '&' : '?';
-        backButton.href = `${baseUrl}${separator}${queryString}`;
+        } else if (source) {
+            // 3. If 'source' exists but is NOT the special case, use the regular logic
+            const separator = source.includes('?') ? '&' : '?';
+            backButton.href = `${source}${separator}${queryString}`;
+
+        } else {
+            // 4. If no 'source' is provided at all, use the default relative path
+            backButton.href = `../?${queryString}`;
+        }
         if (!origin || !dest || !locationMap.has(origin) || !locationMap.has(dest)) {
             document.getElementById('no-results').textContent = 'Please provide valid origin and destination station/stop keys in the URL query parameters (e.g., ?origin=ECL&dest=KSC).';
             document.getElementById('no-results').classList.remove('hidden');
