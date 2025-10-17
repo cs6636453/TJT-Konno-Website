@@ -578,6 +578,7 @@ fieldset.trip_planner label,
 fieldset.trip_planner div {
   margin: 5px;
   padding: 0;
+width: auto;
 }
 
     /* --- Input Fields and Labels --- */
