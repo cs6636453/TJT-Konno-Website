@@ -39,9 +39,28 @@ async function setupData() {
         connectionsData = await connectionsRes.json();
 
         [...dataset.stations, ...dataset.bus_stops].forEach(s => locationMap.set(s.key, s.name));
-        [...dataset.routes, ...dataset.bus_routes].forEach(r => lineMap.set(r.key, { name: r.name, color: r.color || '#cccccc' }));
-        dataset.bus_routes.forEach(r => isBusRoute.add(r.key));
+        
+        // --- MODIFIED LOGIC START ---
+        
+        // Combine all routes into a single list to process them
+        const allRoutes = [...dataset.routes, ...dataset.bus_routes];
+
+        // Populate lineMap and the isBusRoute Set in the same loop
+        allRoutes.forEach(route => {
+            // Add every route to the lineMap
+            lineMap.set(route.key, { name: route.name, color: route.color || '#cccccc' });
+
+            // NEW RULE: If the route key contains any number, it's a bus.
+            if (/\d/.test(route.key)) {
+                isBusRoute.add(route.key);
+            }
+        });
+        
+        // --- MODIFIED LOGIC END ---
+
+        // This line remains the same to preserve the original display order if needed
         linePriority = [...dataset.routes.map(r => r.key), ...dataset.bus_routes.map(r => r.key)];
+
     } catch (error) {
         console.error("Error loading data:", error);
         document.getElementById('no-results').textContent = `Error loading transit data: ${error.message}.`;
@@ -404,7 +423,7 @@ function renderTrip(bestPathDetails, isSameStation = false) {
             const intermediateStops = segment.stops.slice(1, -1);
             const icon = isBusRoute.has(segment.line) ? 'directions_bus' : 'train';
             const freqText = getFrequencyText(segment.freq);
-            
+
             // Logic for the frequency icon
             let freqIcon;
             if (segment.freq === 999) {
