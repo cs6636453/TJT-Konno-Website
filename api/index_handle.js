@@ -112,7 +112,7 @@ function setupAutocomplete(input, hiddenInput) {
         wrapper.appendChild(list);
 
         suggestions.forEach(loc => {
-            const prefix = loc.type === "station" ? "🚇" : "🚏";
+            const prefix = loc.type === "station" ? "🚉" : "🚏";
             const item = document.createElement("div");
             item.textContent = `${prefix} ${loc.name}`;
             item.style.padding = "4px 8px";

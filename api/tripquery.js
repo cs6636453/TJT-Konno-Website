@@ -301,28 +301,33 @@ function getFrequencyText(freq) {
     return `Every ${freq} mins`;
 }
 
-// **MODIFIED** - Abbreviates 'Station' only on mobile
+// **MODIFIED** - All mobile-specific formatting is now in one place
 function getDisplayName(key) {
     let name = locationMap.get(key) || key;
 
-    // Abbreviate "Station" to "Sta." only on smaller screens (mobile devices)
-    if (window.innerWidth <= 768) {
-        name = name.replace(/\bStation\b/gi, 'Sta.');
-    }
-
+    // First, handle general name formatting like removing secondary names
     if (name.includes('/')) {
         name = name.split('/')[0].trim();
     }
 
-    const MAX_LENGTH = 20;
-    if (name.length > MAX_LENGTH) {
-        let truncated = name.substring(0, MAX_LENGTH);
-        let lastSpace = truncated.lastIndexOf(' ');
+    // Apply mobile-specific formatting for smaller screens
+    if (window.innerWidth <= 768) {
+        // Abbreviate "Station" to "Sta."
+        name = name.replace(/\bStation\b/gi, 'Sta.');
 
-        if (lastSpace > 0) {
-            name = truncated.substring(0, lastSpace).trim() + '';
-        } else {
-            name = truncated.trim() + '';
+        // Truncate long names to 20 characters
+        const MAX_LENGTH = 20;
+        if (name.length > MAX_LENGTH) {
+            let truncated = name.substring(0, MAX_LENGTH);
+            let lastSpace = truncated.lastIndexOf(' ');
+
+            if (lastSpace > 0) {
+                // Truncate at the last space to avoid cutting words
+                name = truncated.substring(0, lastSpace).trim();
+            } else {
+                // If no space, just cut it at the limit
+                name = truncated.trim();
+            }
         }
     }
 
