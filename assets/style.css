@@ -639,12 +639,14 @@ main #wasabico div img, main #b41 div img,
 main #tjtbus div img, main #konno24 div img,
 main article div img{
     height: 168px;
+order: 1;
     width: 300px;
 }
 
 main #wasabico div p, main #b41 div p,
 main #tjtbus div p, main #konno24 div p,
 main article div p{
+order: 2;
 margin-left: 0;
 margin-right: 0;
 padding-left: 0;
