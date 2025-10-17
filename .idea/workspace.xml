@@ -6,11 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="68a8b792-d154-4722-a891-be6c00b754a0" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/datanodes.json" beforeDir="false" afterPath="$PROJECT_DIR$/api/datanodes.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/tripquery.js" beforeDir="false" afterPath="$PROJECT_DIR$/api/tripquery.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/tripquery.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/tripquery.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/drawroute.html" beforeDir="false" afterPath="$PROJECT_DIR$/drawroute.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mytripquery/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/mytripquery/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,7 +95,7 @@
       <workItem from="1760516414417" duration="31323000" />
       <workItem from="1760610630728" duration="7124000" />
       <workItem from="1760620750263" duration="9281000" />
-      <workItem from="1760682036014" duration="16439000" />
+      <workItem from="1760682036014" duration="18446000" />
     </task>
     <servers />
   </component>

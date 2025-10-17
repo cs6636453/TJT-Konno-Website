@@ -41,19 +41,35 @@ async function setupData() {
         }
         const dataset = await datasetRes.json();
         connectionsData = await connectionsRes.json();
+
+        // Normalize connection lines to string keys so lookups are consistent everywhere
+        for (const nodeKey in connectionsData) {
+            const neighbors = connectionsData[nodeKey];
+            for (const nbKey in neighbors) {
+                const conn = neighbors[nbKey];
+                if (conn.lines !== undefined) {
+                    conn.lines = Array.isArray(conn.lines) ? conn.lines.map(String) : String(conn.lines);
+                }
+                // keep freq as-is (numbers or arrays of numbers)
+            }
+        }
+
         lineTermini = dataset.terminus || {};
         [...dataset.stations, ...dataset.bus_stops].forEach(s => locationMap.set(s.key, s.name));
         const allRoutes = [...dataset.routes, ...dataset.bus_routes];
         allRoutes.forEach(route => {
-            lineMap.set(route.key, { name: route.name, color: route.color || '#cbd5e0' });
-            if (/\d/.test(route.key)) {
-                isBusRoute.add(route.key);
+            const keyStr = String(route.key);
+            lineMap.set(keyStr, { name: route.name, color: route.color || '#cbd5e0' });
+            if (/\d/.test(keyStr)) {
+                isBusRoute.add(keyStr);
             }
         });
-        linePriority = [...dataset.routes.map(r => r.key), ...dataset.bus_routes.map(r => r.key)];
+        // ensure priority is a string array
+        linePriority = [...dataset.routes.map(r => String(r.key)), ...dataset.bus_routes.map(r => String(r.key))];
     } catch (error) {
         console.error("Error loading data:", error);
-        document.getElementById('no-results').textContent = `Error loading transit data: ${error.message}.`;
+        const noResultsEl = document.getElementById('no-results');
+        if (noResultsEl) noResultsEl.textContent = `Error loading transit data: ${error.message}.`;
         throw error;
     }
 }
@@ -93,8 +109,8 @@ function pathExistsOnLine(startNode, endNode, line, prevNode) {
             for (const neighborKey in neighbors) {
                 if (!visited.has(neighborKey)) {
                     const connection = neighbors[neighborKey];
-                    const availableLines = Array.isArray(connection.lines) ? connection.lines : [connection.lines];
-                    if (availableLines.includes(line)) {
+                    const availableLines = Array.isArray(connection.lines) ? connection.lines.map(String) : [String(connection.lines)];
+                    if (availableLines.includes(String(line))) {
                         visited.add(neighborKey);
                         queue.push(neighborKey);
                     }
@@ -201,16 +217,17 @@ function findBestPath(start, end, criteria) {
             }
 
             const connection = neighbors[neighborKey];
-            const availableLines = Array.isArray(connection.lines) ? connection.lines : [connection.lines];
+            const availableLines = Array.isArray(connection.lines) ? connection.lines.map(String) : [String(connection.lines)];
 
             let linesToExplore;
-            if (currentLine && availableLines.includes(currentLine)) {
-                linesToExplore = [currentLine];
+            if (currentLine && availableLines.includes(String(currentLine))) {
+                linesToExplore = [String(currentLine)];
             } else {
                 linesToExplore = availableLines;
             }
 
-            for (const nextLine of linesToExplore) {
+            for (const nextLineRaw of linesToExplore) {
+                const nextLine = String(nextLineRaw);
                 let newCost = cost;
                 let currentFreq;
                 if (Array.isArray(connection.freq)) {
@@ -228,7 +245,7 @@ function findBestPath(start, end, criteria) {
                 } else if (currentLine !== null && String(nextLine) !== String(currentLine)) {
                     const isThru = connection.flags?.includes("thru") && ((currentLine === 'CY' && nextLine === 'TN') || (currentLine === 'TN' && nextLine === 'CY'));
                     if (!isThru) {
-                        const isCurrentBus = isBusRoute.has(currentLine);
+                        const isCurrentBus = isBusRoute.has(String(currentLine));
                         const isNextBus = isBusRoute.has(nextLine);
                         if (isCurrentBus || isNextBus) newCost += activeCosts.bus_transfer;
                         else newCost += activeCosts.transfer;
@@ -273,11 +290,12 @@ function calculatePathDetails(detailedPath) {
     for (let i = 1; i < detailedPath.length; i++) {
         const fromStation = detailedPath[i - 1].station;
         const toStation = detailedPath[i].station;
-        const line = detailedPath[i].line;
+        const lineRaw = detailedPath[i].line;
+        const line = String(lineRaw);
         const connection = connectionsData[fromStation][toStation];
-        const availableLines = Array.isArray(connection.lines) ? connection.lines : [connection.lines];
+        const availableLines = Array.isArray(connection.lines) ? connection.lines.map(String) : [String(connection.lines)];
 
-        if (String(line) !== "0" && String(line) !== "1") {
+        if (line !== "0" && line !== "1") {
             linesUsed.add(line);
         }
         let legFreq;
@@ -287,20 +305,20 @@ function calculatePathDetails(detailedPath) {
         } else {
             legFreq = connection.freq;
         }
-        if (String(line) === "0" || String(line) === "1") {
+        if (line === "0" || line === "1") {
             lastRealLine = null;
         }
         const isThruService = !!(connection.flags?.includes("thru") && lastRealLine && ((lastRealLine === 'CY' && line === 'TN') || (lastRealLine === 'TN' && line === 'CY')));
-        if (lastRealLine && line !== lastRealLine && String(line) !== "0" && String(line) !== "1" && !isThruService) {
+        if (lastRealLine && line !== lastRealLine && line !== "0" && line !== "1" && !isThruService) {
             transfers++;
         }
 
-        if (String(line) === "0" || String(line) === "1") {
+        if (line === "0" || line === "1") {
             walks++;
         }
 
         legs.push({ from: fromStation, to: toStation, line: line, freq: legFreq, isThru: isThruService, availableLines: availableLines });
-        if (String(line) !== "0" && String(line) !== "1") {
+        if (line !== "0" && line !== "1") {
             lastRealLine = line;
         }
     }
@@ -323,10 +341,10 @@ function getFrequencyText(freq) {
  */
 function getDisplayName(key) {
     let name = locationMap.get(key) || key;
-    if (name.includes('/')) {
+    if (name && name.includes('/')) {
         name = name.split('/')[0].trim();
     }
-    if (window.innerWidth <= 768) {
+    if (window.innerWidth <= 768 && typeof name === 'string') {
         name = name.replace(/\bStation\b/gi, 'Sta.');
         const MAX_LENGTH = 20;
         if (name.length > MAX_LENGTH) {
@@ -365,14 +383,15 @@ function renderMultipleResults(pathDetailsList) {
     const noResults = document.getElementById('no-results');
 
     renderTripHeader();
-    noResults.classList.add('hidden');
-    resultsContainer.innerHTML = '';
-    statsContainer.innerHTML = '';
+    if (noResults) noResults.classList.add('hidden');
+    if (resultsContainer) resultsContainer.innerHTML = '';
+    if (statsContainer) statsContainer.innerHTML = '';
 
     let html = '<h2 class="text-xl font-bold mb-4 mt-4">Recommended Routes</h2>';
 
     pathDetailsList.forEach((details, index) => {
-        const linePills = details.linesUsed.map(lineKey => {
+        const linePills = details.linesUsed.map(lineKeyRaw => {
+            const lineKey = String(lineKeyRaw);
             const lineInfo = lineMap.get(lineKey) || { name: lineKey, color: '#cbd5e0' };
             const textColor = getContrastingTextColor(lineInfo.color);
             const icon = isBusRoute.has(lineKey) ? 'directions_bus' : 'train';
@@ -398,7 +417,7 @@ function renderMultipleResults(pathDetailsList) {
         `;
     });
 
-    resultsContainer.innerHTML = html;
+    if (resultsContainer) resultsContainer.innerHTML = html;
 
     document.querySelectorAll('.summary-card').forEach(card => {
         card.addEventListener('click', () => {
@@ -421,8 +440,8 @@ function renderTrip(bestPathDetails, isSameStation = false, fromSummary = false)
     const statsContainer = document.getElementById('trip-stats');
     const headerContainer = document.getElementById('trip-header');
     const backButton = document.getElementById('back-button');
-    resultsContainer.innerHTML = '';
-    statsContainer.innerHTML = '';
+    if (resultsContainer) resultsContainer.innerHTML = '';
+    if (statsContainer) statsContainer.innerHTML = '';
 
     if (!isSameStation && bestPathDetails) {
         renderTripHeader();
@@ -431,31 +450,37 @@ function renderTrip(bestPathDetails, isSameStation = false, fromSummary = false)
     }
 
     if (fromSummary) {
-        backButton.href = '#';
-        backButton.onclick = (e) => {
-            e.preventDefault();
-            renderMultipleResults(lastPathDetailsList);
-            backButton.onclick = null;
-            setInitialBackButtonHref();
-        };
-    } else {
+        if (backButton) {
+            backButton.href = '#';
+            backButton.onclick = (e) => {
+                e.preventDefault();
+                renderMultipleResults(lastPathDetailsList);
+                backButton.onclick = null;
+                setInitialBackButtonHref();
+            };
+        }
+    } else if (backButton) {
         backButton.onclick = null;
         setInitialBackButtonHref();
     }
 
     if (isSameStation) {
-        noResults.textContent = "Origin and destination are the same.";
-        noResults.classList.remove('hidden');
+        if (noResults) {
+            noResults.textContent = "Origin and destination are the same.";
+            noResults.classList.remove('hidden');
+        }
         return;
     }
     if (!bestPathDetails) {
-        noResults.textContent = `No path found from '${getQueryParams().origin}' to '${getQueryParams().dest}'.`;
-        noResults.classList.remove('hidden');
+        if (noResults) {
+            noResults.textContent = `No path found from '${getQueryParams().origin}' to '${getQueryParams().dest}'.`;
+            noResults.classList.remove('hidden');
+        }
         return;
     }
-    noResults.classList.add('hidden');
+    if (noResults) noResults.classList.add('hidden');
 
-    statsContainer.innerHTML = `
+    if (statsContainer) statsContainer.innerHTML = `
         <div class="flex items-center gap-2">
             <span class="material-symbols-outlined">tram</span>
             <span>${bestPathDetails.stationCount - 1} stops</span>
@@ -480,10 +505,11 @@ function renderTrip(bestPathDetails, isSameStation = false, fromSummary = false)
         let currentRide = null;
 
         const getBestLine = (lines) => {
+            const stringLines = lines.map(String);
             for (const p of linePriority) {
-                if (lines.includes(p)) return p;
+                if (stringLines.includes(p)) return p;
             }
-            return lines[0];
+            return stringLines[0];
         };
 
         for (const leg of bestPathDetails.legs) {
@@ -497,7 +523,7 @@ function renderTrip(bestPathDetails, isSameStation = false, fromSummary = false)
             const legDirection = getLegDirection(leg, leg.line);
 
             if (currentRide) {
-                const commonLines = currentRide.commonLines.filter(line => leg.availableLines.includes(line));
+                const commonLines = currentRide.commonLines.filter(line => leg.availableLines.map(String).includes(String(line)));
                 const directionChanges = currentRide.direction !== null && legDirection !== currentRide.direction;
 
                 if (commonLines.length === 0 || directionChanges) {
@@ -531,7 +557,8 @@ function renderTrip(bestPathDetails, isSameStation = false, fromSummary = false)
     let html = '';
     processedSegments.forEach((segment, index) => {
         if (segment.type === 'ride') {
-            const lineInfo = lineMap.get(segment.line) || { name: segment.line, color: '#cbd5e0' };
+            const lineKey = String(segment.line);
+            const lineInfo = lineMap.get(lineKey) || { name: lineKey, color: '#cbd5e0' };
             const textColor = getContrastingTextColor(lineInfo.color);
             const startStation = getDisplayName(segment.stops[0]);
             const endStationKey = segment.stops.at(-1);
@@ -544,7 +571,7 @@ function renderTrip(bestPathDetails, isSameStation = false, fromSummary = false)
             }
 
             const intermediateStops = segment.stops.slice(1, -1);
-            const icon = isBusRoute.has(segment.line) ? 'directions_bus' : 'train';
+            const icon = isBusRoute.has(lineKey) ? 'directions_bus' : 'train';
             const freqText = getFrequencyText(segment.freq);
             let freqIcon;
             if (segment.freq === 999) freqIcon = 'support_agent';
@@ -560,7 +587,7 @@ function renderTrip(bestPathDetails, isSameStation = false, fromSummary = false)
             const icon = 'directions_walk';
             const stationName = getDisplayName(segment.at || segment.from);
             const prevRide = processedSegments[index - 1];
-            const prevLineInfo = prevRide ? (lineMap.get(prevRide.line) || { name: prevRide.line, color: '#cbd5e0' }) : { color: '#cbd5e0', name: '' };
+            const prevLineInfo = prevRide ? (lineMap.get(String(prevRide.line)) || { name: prevRide.line, color: '#cbd5e0' }) : { color: '#cbd5e0', name: '' };
 
             let lineTop = (index === 0 && segment.type === 'osi') ? '50%' : '0';
             html += `<div class="timeline-item"><div class="timeline-connector"><div class="timeline-line" style="background-color: ${prevLineInfo.color}; top: ${lineTop}; bottom: 50%;"></div><div class="timeline-dot" style="border-color: ${prevLineInfo.color};"></div></div><div class="timeline-content station-content"><div class="font-bold text-xl station-name">${stationName}</div></div></div>`;
@@ -574,12 +601,12 @@ function renderTrip(bestPathDetails, isSameStation = false, fromSummary = false)
     if (lastLeg) {
         const finalStation = getDisplayName(lastLeg.stops ? lastLeg.stops.at(-1) : lastLeg.to);
         let finalLineInfo;
-        if (lastLeg.type === 'ride') finalLineInfo = lineMap.get(lastLeg.line) || { color: '#cbd5e0' };
+        if (lastLeg.type === 'ride') finalLineInfo = lineMap.get(String(lastLeg.line)) || { color: '#cbd5e0' };
         else finalLineInfo = { color: '#cbd5e0' };
         html += `<div class="timeline-item"><div class="timeline-connector"><div class="timeline-line" style="background-color: ${finalLineInfo.color}; top: 0; bottom: 50%;"></div><div class="timeline-dot" style="border-color: ${finalLineInfo.color};"></div></div><div class="timeline-content station-content"><div class="font-bold text-xl station-name">${finalStation}</div></div></div>`;
     }
 
-    resultsContainer.innerHTML = html;
+    if (resultsContainer) resultsContainer.innerHTML = html;
     document.querySelectorAll('.toggle-stops').forEach(button => {
         button.addEventListener('click', () => {
             const targetId = button.getAttribute('data-target');
@@ -609,6 +636,7 @@ function setInitialBackButtonHref() {
     const urlParams = new URLSearchParams(window.location.search);
     const source = urlParams.get('source');
     const queryString = `criteria=${criteria || ''}&origin=${origin || ''}&dest=${dest || ''}`;
+    if (!backButton) return;
     if (source && source.includes('limaru')) {
         backButton.href = `https://www.limaru.net/transportation?${queryString}`;
     } else if (source) {
@@ -667,8 +695,10 @@ function filterInefficientDetours(pathDetailsList, connections) {
  */
 async function planTrip() {
     const loading = document.getElementById('loading');
-    loading.style.display = 'flex';
-    loading.style.opacity = '1';
+    if (loading) {
+        loading.style.display = 'flex';
+        loading.style.opacity = '1';
+    }
 
     try {
         await setupData();
@@ -677,8 +707,11 @@ async function planTrip() {
         setInitialBackButtonHref();
 
         if (!origin || !dest || !locationMap.has(origin) || !locationMap.has(dest)) {
-            document.getElementById('no-results').textContent = 'Please provide valid origin and destination station/stop keys in the URL query parameters (e.g., ?origin=ECL&dest=KSC).';
-            document.getElementById('no-results').classList.remove('hidden');
+            const noRes = document.getElementById('no-results');
+            if (noRes) {
+                noRes.textContent = 'Please provide valid origin and destination station/stop keys in the URL query parameters (e.g., ?origin=ECL&dest=KSC).';
+                noRes.classList.remove('hidden');
+            }
             return;
         }
         if (origin === dest) {
@@ -729,11 +762,17 @@ async function planTrip() {
 
     } catch (error) {
         console.error("Trip planning failed:", error);
-        document.getElementById('no-results').textContent = `An unexpected error occurred during trip planning: ${error.message}`;
-        document.getElementById('no-results').classList.remove('hidden');
+        const noRes = document.getElementById('no-results');
+        if (noRes) {
+            noRes.textContent = `An unexpected error occurred during trip planning: ${error.message}`;
+            noRes.classList.remove('hidden');
+        }
     } finally {
-        loading.style.opacity = '0';
-        setTimeout(() => { loading.style.display = 'none'; }, 300);
+        const loadingEl = document.getElementById('loading');
+        if (loadingEl) {
+            loadingEl.style.opacity = '0';
+            setTimeout(() => { loadingEl.style.display = 'none'; }, 300);
+        }
     }
 }
 
