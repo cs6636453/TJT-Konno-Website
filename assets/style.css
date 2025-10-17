@@ -574,7 +574,7 @@ padding-right: 0;
 }
 
 fieldset.trip_planner label,
-fieldset.trip_planner div {
+#trip_planner form fieldset.trip_planner div {
   margin: 5px;
   padding: 0;
 width: auto;
