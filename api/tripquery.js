@@ -402,15 +402,18 @@ function renderTrip(bestPathDetails, isSameStation = false) {
             }
 
             const intermediateStops = segment.stops.slice(1, -1);
-            let icon;
-            if (segment.freq === 999) {
-                icon = 'support_agent'; // Icon for requesting a driver
-            } else if (segment.freq === 0) {
-                icon = 'touch_app';     // Icon for semi-auto service (press a button)
-            } else {
-                icon = isBusRoute.has(segment.line) ? 'directions_bus' : 'train'; // Default logic
-            }
+            const icon = isBusRoute.has(segment.line) ? 'directions_bus' : 'train';
             const freqText = getFrequencyText(segment.freq);
+            
+            // Logic for the frequency icon
+            let freqIcon;
+            if (segment.freq === 999) {
+                freqIcon = 'support_agent';
+            } else if (segment.freq === 0) {
+                freqIcon = 'touch_app';
+            } else {
+                freqIcon = 'schedule'; // Default clock icon
+            }
 
             if (!segment.isThruEntry) {
                 html += `<div class="timeline-item">
@@ -434,7 +437,7 @@ function renderTrip(bestPathDetails, isSameStation = false) {
                                 </div>
                                 <span class="block md:inline md:ml-2 text-gray-600 mt-1 md:mt-0">to <span class="station-name">${displayDestinationName}</span></span>
                                 <div class="text-sm text-gray-500 mt-1 flex items-center gap-1">
-                                    <span class="material-symbols-outlined text-base">schedule</span>
+                                    <span class="material-symbols-outlined text-base">${freqIcon}</span>
                                     <span>${freqText}</span>
                                 </div>
                             </div>
