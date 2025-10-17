@@ -40,25 +40,15 @@ async function setupData() {
 
         [...dataset.stations, ...dataset.bus_stops].forEach(s => locationMap.set(s.key, s.name));
         
-        // --- MODIFIED LOGIC START ---
-        
-        // Combine all routes into a single list to process them
         const allRoutes = [...dataset.routes, ...dataset.bus_routes];
 
-        // Populate lineMap and the isBusRoute Set in the same loop
         allRoutes.forEach(route => {
-            // Add every route to the lineMap
             lineMap.set(route.key, { name: route.name, color: route.color || '#cccccc' });
-
-            // NEW RULE: If the route key contains any number, it's a bus.
             if (/\d/.test(route.key)) {
                 isBusRoute.add(route.key);
             }
         });
         
-        // --- MODIFIED LOGIC END ---
-
-        // This line remains the same to preserve the original display order if needed
         linePriority = [...dataset.routes.map(r => r.key), ...dataset.bus_routes.map(r => r.key)];
 
     } catch (error) {
@@ -73,11 +63,10 @@ function getQueryParams() {
     return {
         origin: params.get('origin'),
         dest: params.get('dest'),
-        criteria: params.get('criteria') || 'fastest' // Default to 'fastest'
+        criteria: params.get('criteria') || 'fastest'
     };
 }
 
-// --- HELPER to check path existence for determining direction ---
 function pathExistsOnLine(startNode, endNode, line, prevNode) {
     const queue = [startNode];
     const visited = new Set([prevNode, startNode]);
@@ -174,15 +163,15 @@ function findBestPath(start, end, criteria) {
                 newCost += activeCosts.station;
                 stepBreakdown.push(`+${activeCosts.station} (station)`);
 
-                if (String(nextLine) === "0") { // Normal OSI walk
+                if (String(nextLine) === "0") {
                     newCost += activeCosts.osi;
                     stepBreakdown.push(`+${activeCosts.osi} (OSI)`);
                     if (path.length === 1) {
-                        newCost -= (activeCosts.osi * 0.5); // 50% discount on initial walk
+                        newCost -= (activeCosts.osi * 0.5);
                         stepBreakdown.push(`-${activeCosts.osi * 0.5} (Initial walk bonus)`);
                     }
-                } else if (String(nextLine) === "1") { // Special walk with unique cost
-                    newCost += 1; // Add the special cost of 1 as requested
+                } else if (String(nextLine) === "1") {
+                    newCost += 1;
                     stepBreakdown.push(`+1 (special walk)`);
                 } else if (currentLine !== null && String(nextLine) !== String(currentLine)) {
                     const isThru = connection.flags?.includes("thru") &&
@@ -424,14 +413,13 @@ function renderTrip(bestPathDetails, isSameStation = false) {
             const icon = isBusRoute.has(segment.line) ? 'directions_bus' : 'train';
             const freqText = getFrequencyText(segment.freq);
 
-            // Logic for the frequency icon
             let freqIcon;
             if (segment.freq === 999) {
                 freqIcon = 'support_agent';
             } else if (segment.freq === 0) {
                 freqIcon = 'touch_app';
             } else {
-                freqIcon = 'schedule'; // Default clock icon
+                freqIcon = 'schedule';
             }
 
             if (!segment.isThruEntry) {
@@ -523,15 +511,14 @@ function renderTrip(bestPathDetails, isSameStation = false) {
     const lastLeg = processedSegments.at(-1);
     if (lastLeg) {
         const finalStation = getDisplayName(lastLeg.stops ? lastLeg.stops.at(-1) : lastLeg.to);
-        let finalLineInfo = { color: '#cbd5e0' };
+        let finalLineInfo;
 
         if (lastLeg.type === 'ride') {
             finalLineInfo = lineMap.get(lastLeg.line) || { name: lastLeg.line, color: '#cccccc' };
         } else if (lastLeg.type === 'thru') {
             finalLineInfo = lineMap.get(lastLeg.toLine) || { name: lastLeg.toLine, color: '#cccccc' };
         } else {
-            const prevRide = processedSegments.slice(0, -1).reverse().find(s => s.type === 'ride');
-            finalLineInfo = prevRide ? (lineMap.get(prevRide.line) || { name: prevRide.line, color: '#cccccc' }) : { color: '#cbd5e0' };
+            finalLineInfo = { color: '#cbd5e0' };
         }
 
         html += `<div class="timeline-item">
