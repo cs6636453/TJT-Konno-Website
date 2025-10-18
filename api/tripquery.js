@@ -944,42 +944,12 @@ async function planTrip() {
         // pathDetailsList = filterUnnecessaryWalks(pathDetailsList);
         // pathDetailsList = filterInefficientDetours(pathDetailsList, connectionsData);
 
-        // Display all viable routes (up to MAX_SOLUTIONS = 100), sorted by the chosen criteria.
         lastPathDetailsList = pathDetailsList;
 
-        // ** The duplicate route filter has been removed to show all results. **
-        // if (lastPathDetailsList.length > 1) {
-        //     const getPathSignature = (details) => {
-        //         const lineSequence = [];
-        //         details.legs.forEach(leg => {
-        //             const line = String(leg.line);
-        //             const lastPushedLine = lineSequence.length > 0 ? lineSequence.at(-1) : null;
-
-        //             if (line !== "0" && line !== "1") { // It's a train/bus
-        //                 if (lastPushedLine !== line) {
-        //                     lineSequence.push(line);
-        //                 }
-        //             } else { // It's a walk
-        //                 if (lastPushedLine !== 'WALK') {
-        //                    lineSequence.push('WALK');
-        //                 }
-        //             }
-        //         });
-        //         return `${details.stationCount}:${details.walks}:${lineSequence.join('>')}`;
-        //     };
-
-        //     const uniquePaths = new Map();
-        //     for (const path of lastPathDetailsList) {
-        //         const signature = getPathSignature(path);
-        //         if (!uniquePaths.has(signature)) {
-        //             uniquePaths.set(signature, path);
-        //         }
-        //     }
-        //     lastPathDetailsList = Array.from(uniquePaths.values());
-        //     if (pathDetailsList.length !== lastPathDetailsList.length) {
-        //          console.log(`Filtered down to ${lastPathDetailsList.length} unique routes from ${pathDetailsList.length}.`);
-        //     }
-        // }
+        if (lastPathDetailsList.length > 5) {
+            lastPathDetailsList = lastPathDetailsList.slice(0, 5);
+            console.log("Limiting results to the top 5 routes to prevent browser lag.");
+        }
 
         if (lastPathDetailsList.length > 1) {
             renderMultipleResults(lastPathDetailsList);
