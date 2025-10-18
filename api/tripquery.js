@@ -971,6 +971,8 @@ async function planTrip() {
         lastPathDetailsList = pathDetailsList;
 
         // **Filter identical paths for summary view**
+        // The following block is commented out to ensure the summary view is always shown when multiple paths are found.
+        /*
         if (lastPathDetailsList.length > 1) {
             const firstPath = lastPathDetailsList[0];
 
@@ -1000,6 +1002,7 @@ async function planTrip() {
                 console.log("All remaining routes are identical in summary metrics. Displaying only one route.");
             }
         }
+        */
 
         if (lastPathDetailsList.length > 1) {
             renderMultipleResults(lastPathDetailsList);
@@ -1031,4 +1034,3 @@ window.addEventListener('DOMContentLoaded', planTrip);
 // Version information - placed at the bottommost
 const version = "Canary 2.1.3";
 document.getElementById('version').innerHTML = version;
-
