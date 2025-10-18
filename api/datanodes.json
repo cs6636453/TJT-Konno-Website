@@ -124,8 +124,7 @@
   "BPR": {
     "BWD": { "lines": ["TK", "KK", "NE"], "flags": "", "freq": 999 },
     "TWF": { "lines": ["TK", "KK"], "flags": "", "freq": 999 },
-    "TUT": { "lines": ["NE"], "flags": "", "freq": 999 },
-    "0043": { "lines": [1], "flags": "", "freq": 0 }
+    "TUT": { "lines": ["NE"], "flags": "", "freq": 999 }
   },
 
   "BWD": {
