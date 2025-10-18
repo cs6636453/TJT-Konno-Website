@@ -181,7 +181,7 @@ function findBestPath(start, end, criteria) {
 
     const MAX_ITERATIONS = 30000;
     let iterations = 0;
-    const MAX_SOLUTIONS = 100;
+    const MAX_SOLUTIONS = 5; // Limit search to 5 solutions to prevent lag
 
     while (pq.length > 0 && iterations < MAX_ITERATIONS) {
         iterations++;
@@ -193,11 +193,10 @@ function findBestPath(start, end, criteria) {
             solutions.push({ cost, path });
             solutions.sort((a, b) => a.cost - b.cost);
             if (solutions.length >= MAX_SOLUTIONS) {
-                solutions.splice(MAX_SOLUTIONS);
+                // Stop searching once we have enough solutions
+                break;
             }
-            if (solutions.length >= MAX_SOLUTIONS && cost > solutions.at(-1).cost) {
-                continue;
-            }
+            continue; // Continue to find other potential paths within the limit
         }
 
         // The 'visited' check has been removed to allow exploration of all paths.
@@ -946,10 +945,11 @@ async function planTrip() {
 
         lastPathDetailsList = pathDetailsList;
 
-        if (lastPathDetailsList.length > 5) {
-            lastPathDetailsList = lastPathDetailsList.slice(0, 5);
-            console.log("Limiting results to the top 5 routes to prevent browser lag.");
-        }
+        // This slice is no longer needed as the search is limited upstream.
+        // if (lastPathDetailsList.length > 5) {
+        //     lastPathDetailsList = lastPathDetailsList.slice(0, 5);
+        //     console.log("Limiting results to the top 5 routes to prevent browser lag.");
+        // }
 
         if (lastPathDetailsList.length > 1) {
             renderMultipleResults(lastPathDetailsList);
