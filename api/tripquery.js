@@ -950,43 +950,25 @@ async function planTrip() {
         // pathDetailsList = filterUnnecessaryWalks(pathDetailsList);
         // pathDetailsList = filterInefficientDetours(pathDetailsList, connectionsData);
 
-        if (pathDetailsList.length > 1) {
-            const bestSolution = pathDetailsList[0];
-            const filteredList = pathDetailsList.filter((currentSolution, index) => {
-                if (index === 0) return true;
-
-                const isMuchLonger = currentSolution.stationCount > bestSolution.stationCount * 1.5 + 3;
-                const hasMoreWalks = currentSolution.walks > bestSolution.walks + 1;
-
-                if (isMuchLonger && hasMoreWalks) {
-                    console.log("Filtering out nonsensical route:", currentSolution.path.join(' -> '));
-                    return false;
-                }
-                return true;
-            });
-            pathDetailsList = filteredList;
-        }
-
         // Display all viable routes (up to MAX_SOLUTIONS = 100)
         lastPathDetailsList = pathDetailsList;
 
-        // **Filter identical paths for summary view**
-        // The following block is commented out to ensure the summary view is always shown when multiple paths are found.
-        /*
+        // **Filter out duplicate routes for the summary view**
+        // This ensures that if multiple paths have the same stops, walks, and line sequence,
+        // we only show one summary card for them.
         if (lastPathDetailsList.length > 1) {
-            const firstPath = lastPathDetailsList[0];
-
-            // Create a simplified "signature" for comparison
-            // Signature uses the single actual line (leg.line) for redundancy check
             const getPathSignature = (details) => {
                 const lineSequence = [];
                 details.legs.forEach(leg => {
                     const line = String(leg.line);
-                    if (line !== "0" && line !== "1" && lineSequence.at(-1) !== line) {
-                        lineSequence.push(line);
-                    } else if (line === "0" || line === "1") {
-                        // Use a placeholder for walk/osi segments to ensure sequence matches
-                        if (lineSequence.at(-1) !== 'WALK') {
+                    const lastPushedLine = lineSequence.length > 0 ? lineSequence.at(-1) : null;
+
+                    if (line !== "0" && line !== "1") { // It's a train/bus
+                        if (lastPushedLine !== line) {
+                            lineSequence.push(line);
+                        }
+                    } else { // It's a walk
+                        if (lastPushedLine !== 'WALK') {
                             lineSequence.push('WALK');
                         }
                     }
@@ -994,15 +976,18 @@ async function planTrip() {
                 return `${details.stationCount}:${details.walks}:${lineSequence.join('>')}`;
             };
 
-            const firstSignature = getPathSignature(firstPath);
-            const allIdentical = lastPathDetailsList.every(path => getPathSignature(path) === firstSignature);
-
-            if (allIdentical) {
-                lastPathDetailsList = [firstPath]; // Filter down to one
-                console.log("All remaining routes are identical in summary metrics. Displaying only one route.");
+            const uniquePaths = new Map();
+            for (const path of lastPathDetailsList) {
+                const signature = getPathSignature(path);
+                if (!uniquePaths.has(signature)) {
+                    uniquePaths.set(signature, path);
+                }
+            }
+            lastPathDetailsList = Array.from(uniquePaths.values());
+            if (pathDetailsList.length !== lastPathDetailsList.length) {
+                console.log(`Filtered down to ${lastPathDetailsList.length} unique routes from ${pathDetailsList.length}.`);
             }
         }
-        */
 
         if (lastPathDetailsList.length > 1) {
             renderMultipleResults(lastPathDetailsList);
@@ -1034,3 +1019,4 @@ window.addEventListener('DOMContentLoaded', planTrip);
 // Version information - placed at the bottommost
 const version = "Canary 2.1.3";
 document.getElementById('version').innerHTML = version;
+
