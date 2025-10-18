@@ -177,12 +177,11 @@ function findBestPath(start, end, criteria) {
     };
     const activeCosts = costs[criteria] || costs['fastest'];
     const pq = [{ cost: 0, path: [{ station: start, line: null }], line: null }];
-    const visited = new Map();
     const solutions = [];
 
     const MAX_ITERATIONS = 30000;
     let iterations = 0;
-    const MAX_SOLUTIONS = 100; // Unlimited as per user request
+    const MAX_SOLUTIONS = 100;
 
     while (pq.length > 0 && iterations < MAX_ITERATIONS) {
         iterations++;
@@ -201,13 +200,8 @@ function findBestPath(start, end, criteria) {
             }
         }
 
-        const visitedKey = `${currentNode}-${currentLine}`;
-        if (visited.has(visitedKey) && visited.get(visitedKey) <= cost) {
-            continue;
-        }
-        if (currentNode !== end) {
-            visited.set(visitedKey, cost);
-        }
+        // The 'visited' check has been removed to allow exploration of all paths.
+        // This ensures symmetrical results regardless of search direction.
 
         const neighbors = connectionsData[currentNode];
         if (!neighbors) continue;
