@@ -177,7 +177,8 @@
 
   "TPK": {
     "LJN": { "lines": ["LP"], "flags": "", "freq": 8 },
-    "GCF": { "lines": ["LP"], "flags": "", "freq": 8 }
+    "GCF": { "lines": ["LP"], "flags": "", "freq": 8 },
+    "0042": { "lines": [0], "flags": "", "freq": 0 }
   },
 
   "GCF": {
@@ -549,12 +550,18 @@
 
   "0025": {
     "0023": { "lines": ["M9"], "flags": "", "freq": 999 },
-    "0026": { "lines": ["M9"], "flags": "", "freq": 999 },
+    "0042": { "lines": ["M9"], "flags": "", "freq": 999 },
     "LJN": { "lines": [0], "flags": "", "freq": 0 }
   },
 
   "0026": {
-    "0025": { "lines": ["M9"], "flags": "", "freq": 999 }
+    "0042": { "lines": ["M9"], "flags": "", "freq": 999 }
+  },
+
+  "0042": {
+    "0025": { "lines": ["M9"], "flags": "", "freq": 999 },
+    "0026": { "lines": ["M9"], "flags": "", "freq": 999 },
+    "TPK": { "lines": [1], "flags": "", "freq": 0 }
   },
 
   "0013": {

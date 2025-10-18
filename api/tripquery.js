@@ -854,6 +854,8 @@ function setInitialBackButtonHref() {
     // Set the base URL for the 'back' action, ensuring it includes the path back to the parent directory or domain root.
     if (source && source.includes('limaru')) {
         backButton.href = `https://www.limaru.net/transportation?${queryString}`;
+    } else if (source && source.includes('harlon')) {
+        backButton.href = `https://ht.harlonserver.net/?${queryString}`;
     } else if (source) {
         const separator = source.includes('?') ? '&' : '?';
         backButton.href = `${source}${separator}${queryString}`;
